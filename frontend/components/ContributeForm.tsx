@@ -3,18 +3,22 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useAccount } from "wagmi";
 import { useContribute } from "@/hooks/useContribute";
-import { parseMon } from "@/lib/format";
+import { useTransactionToast } from "@/hooks/useTransactionToast";
+import { formatMon, parseMon } from "@/lib/format";
 import { TransactionStatus } from "./TransactionStatus";
 
 interface ContributeFormProps {
   potId: bigint;
+  remainingAmount?: bigint;
   onSuccess?: () => void;
 }
 
-export function ContributeForm({ potId, onSuccess }: ContributeFormProps) {
+export function ContributeForm({ potId, remainingAmount, onSuccess }: ContributeFormProps) {
   const { isConnected } = useAccount();
   const { contribute, hash, isPending, isConfirming, isConfirmed, error } = useContribute();
   const [amount, setAmount] = useState("");
+
+  useTransactionToast(isConfirmed, error, "You're in — thanks for chipping in.");
 
   useEffect(() => {
     if (isConfirmed) {
@@ -32,11 +36,19 @@ export function ContributeForm({ potId, onSuccess }: ContributeFormProps) {
   };
 
   return (
-    <form className="space-y-3 rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm" onSubmit={handleSubmit}>
-      <label htmlFor="amount" className="text-sm font-medium text-neutral-700">
-        Chip in
-      </label>
-      <div className="flex gap-2">
+    <form
+      className="space-y-3 rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm sm:p-6"
+      onSubmit={handleSubmit}
+    >
+      <div className="flex items-baseline justify-between">
+        <label htmlFor="amount" className="text-sm font-medium text-neutral-700">
+          Chip in
+        </label>
+        {remainingAmount !== undefined && remainingAmount > 0n && (
+          <span className="text-xs text-neutral-400">{formatMon(remainingAmount)} still needed</span>
+        )}
+      </div>
+      <div className="flex flex-col gap-2 sm:flex-row">
         <input
           id="amount"
           type="number"

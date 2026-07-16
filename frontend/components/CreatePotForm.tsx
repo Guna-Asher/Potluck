@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useAccount } from "wagmi";
 import { useCreatePot } from "@/hooks/useCreatePot";
-import { parseMon } from "@/lib/format";
+import { useTransactionToast } from "@/hooks/useTransactionToast";
+import { minDatetimeLocalValue, parseMon } from "@/lib/format";
 import { TransactionStatus } from "./TransactionStatus";
 
 export function CreatePotForm() {
@@ -16,6 +17,13 @@ export function CreatePotForm() {
   const [description, setDescription] = useState("");
   const [goal, setGoal] = useState("");
   const [deadline, setDeadline] = useState("");
+  const [deadlineError, setDeadlineError] = useState<string | null>(null);
+
+  // "Now" as a floor so the picker won't offer a past moment — the contract's
+  // own DeadlineInPast check is the real enforcement; any future time is valid.
+  const minDeadline = useMemo(() => minDatetimeLocalValue(0), []);
+
+  useTransactionToast(isConfirmed, error, "Pot created!");
 
   useEffect(() => {
     if (isConfirmed && potId !== undefined) {
@@ -25,9 +33,17 @@ export function CreatePotForm() {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
+    setDeadlineError(null);
     if (!title.trim() || !goal || !deadline) return;
 
-    const deadlineTimestamp = BigInt(Math.floor(new Date(deadline).getTime() / 1000));
+    const deadlineDate = new Date(deadline);
+
+    if (deadlineDate.getTime() <= Date.now()) {
+      setDeadlineError("Pick a deadline that's in the future.");
+      return;
+    }
+
+    const deadlineTimestamp = BigInt(Math.floor(deadlineDate.getTime() / 1000));
     createPot(title.trim(), description.trim(), parseMon(goal), deadlineTimestamp);
   };
 
@@ -36,7 +52,7 @@ export function CreatePotForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-5 rounded-2xl border border-neutral-100 bg-white p-6 shadow-sm"
+      className="space-y-5 rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm sm:p-6"
     >
       <div className="space-y-1.5">
         <label htmlFor="title" className="text-sm font-medium text-neutral-700">
@@ -68,7 +84,7 @@ export function CreatePotForm() {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <label htmlFor="goal" className="text-sm font-medium text-neutral-700">
             Goal (MON)
@@ -94,12 +110,18 @@ export function CreatePotForm() {
             id="deadline"
             type="datetime-local"
             value={deadline}
-            onChange={(e) => setDeadline(e.target.value)}
+            min={minDeadline}
+            onChange={(e) => {
+              setDeadline(e.target.value);
+              setDeadlineError(null);
+            }}
             required
             className="w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-neutral-900 outline-none focus:border-neutral-400"
           />
         </div>
       </div>
+
+      {deadlineError && <p className="text-sm text-red-600">{deadlineError}</p>}
 
       <button
         type="submit"

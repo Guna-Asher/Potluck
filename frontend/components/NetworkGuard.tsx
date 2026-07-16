@@ -15,7 +15,7 @@ export function NetworkGuard() {
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-900">
+    <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-900">
       <span>You&rsquo;re on the wrong network. Potluck runs on Monad Testnet.</span>
       <button
         onClick={() => switchChain({ chainId: monadTestnet.id })}

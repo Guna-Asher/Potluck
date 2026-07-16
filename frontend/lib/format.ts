@@ -19,6 +19,13 @@ export function isExpired(deadline: bigint): boolean {
   return BigInt(Math.floor(Date.now() / 1000)) > deadline;
 }
 
+// Local-time string (no timezone) for a <input type="datetime-local"> min attribute.
+export function minDatetimeLocalValue(minutesFromNow: number): string {
+  const date = new Date(Date.now() + minutesFromNow * 60_000);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
 export function formatCountdown(deadline: bigint): string {
   const nowSeconds = BigInt(Math.floor(Date.now() / 1000));
   if (deadline <= nowSeconds) return "Closed";

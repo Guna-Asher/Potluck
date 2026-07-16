@@ -5,6 +5,8 @@ import { useAccount } from "wagmi";
 import { usePot } from "@/hooks/usePot";
 import { useContribution } from "@/hooks/useContribution";
 import { useClaimRefund } from "@/hooks/useClaimRefund";
+import { useTransactionToast } from "@/hooks/useTransactionToast";
+import { getPotStatus } from "@/lib/potStatus";
 import { formatMon } from "@/lib/format";
 import { TransactionStatus } from "./TransactionStatus";
 
@@ -12,14 +14,17 @@ interface ClaimRefundButtonProps {
   potId: bigint;
 }
 
-/** Self-gating, mirroring claimRefund()'s own conditions: renders nothing
- * unless the pot has expired, was never released, and the connected wallet
- * actually has a contribution recorded against this pot. */
+/** Self-gating: renders nothing unless the pot is "refundable" (past deadline,
+ * never released — regardless of whether the goal was met, matching the
+ * contract's abandoned-organizer fallback) and the connected wallet has a
+ * recorded contribution. */
 export function ClaimRefundButton({ potId }: ClaimRefundButtonProps) {
   const { address } = useAccount();
   const { pot, refetch: refetchPot } = usePot(potId);
   const { contribution, refetch: refetchContribution } = useContribution(potId);
   const { claimRefund, hash, isPending, isConfirming, isConfirmed, error } = useClaimRefund();
+
+  useTransactionToast(isConfirmed, error, "Refunded to your wallet.");
 
   useEffect(() => {
     if (isConfirmed) {
@@ -29,18 +34,18 @@ export function ClaimRefundButton({ potId }: ClaimRefundButtonProps) {
   }, [isConfirmed, refetchPot, refetchContribution]);
 
   if (!pot || !address) return null;
+  if (getPotStatus(pot) !== "refundable" || contribution === 0n) return null;
 
-  const nowSeconds = BigInt(Math.floor(Date.now() / 1000));
-  const potExpired = nowSeconds > pot.deadline;
-
-  if (pot.released || !potExpired || contribution === 0n) {
-    return null;
-  }
-
+  const goalWasMet = pot.totalContributed >= pot.targetAmount;
   const isSubmitting = isPending || isConfirming;
 
   return (
     <div className="space-y-2">
+      <p className="text-sm text-neutral-500">
+        {goalWasMet
+          ? "This pot reached its goal, but wasn't released before the deadline."
+          : "This pot didn't reach its goal in time."}
+      </p>
       <button
         onClick={() => claimRefund(potId)}
         disabled={isSubmitting}

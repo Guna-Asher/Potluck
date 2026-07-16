@@ -1,39 +1,43 @@
+import type { Pot } from "@/hooks/usePot";
 import { calculateProgress, formatCountdown, formatMon } from "@/lib/format";
+import { Card } from "./ui/Card";
+import { PotStatusBadge } from "./PotStatusBadge";
 
 interface PotProgressProps {
-  totalContributed: bigint;
-  targetAmount: bigint;
-  deadline: bigint;
-  contributorCount: bigint;
-  released: boolean;
+  pot: Pot;
 }
 
-export function PotProgress({
-  totalContributed,
-  targetAmount,
-  deadline,
-  contributorCount,
-  released,
-}: PotProgressProps) {
-  const percentage = calculateProgress(totalContributed, targetAmount);
+export function PotProgress({ pot }: PotProgressProps) {
+  const percentage = calculateProgress(pot.totalContributed, pot.targetAmount);
+  const nearGoal = percentage >= 75 && percentage < 100;
 
   return (
-    <div className="space-y-3 rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm">
-      <div className="flex items-baseline justify-between">
-        <span className="text-2xl font-semibold text-neutral-900">{formatMon(totalContributed)}</span>
-        <span className="text-neutral-400">of {formatMon(targetAmount)} goal</span>
+    <Card className="space-y-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <span className="text-3xl font-semibold tracking-tight text-neutral-900">
+            {formatMon(pot.totalContributed)}
+          </span>
+          <span className="ml-1.5 text-neutral-400">of {formatMon(pot.targetAmount)} goal</span>
+        </div>
+        <PotStatusBadge pot={pot} />
       </div>
 
-      <div className="h-2.5 w-full overflow-hidden rounded-full bg-neutral-100">
-        <div className="h-full rounded-full bg-emerald-500 transition-all" style={{ width: `${percentage}%` }} />
+      <div className="h-3 w-full overflow-hidden rounded-full bg-neutral-100">
+        <div
+          className={`h-full rounded-full transition-all duration-700 ease-out ${
+            percentage >= 100 ? "bg-emerald-500" : nearGoal ? "bg-emerald-400" : "bg-blue-400"
+          }`}
+          style={{ width: `${percentage}%` }}
+        />
       </div>
 
       <div className="flex items-center justify-between text-sm text-neutral-500">
         <span>
-          {contributorCount.toString()} {contributorCount === 1n ? "person" : "people"} chipped in
+          {pot.contributorCount.toString()} {pot.contributorCount === 1n ? "person" : "people"} chipped in
         </span>
-        <span>{released ? "Released" : formatCountdown(deadline)}</span>
+        <span>{formatCountdown(pot.deadline)}</span>
       </div>
-    </div>
+    </Card>
   );
 }

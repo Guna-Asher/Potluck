@@ -4,20 +4,24 @@ import { useEffect } from "react";
 import { useAccount } from "wagmi";
 import { usePot } from "@/hooks/usePot";
 import { useRelease } from "@/hooks/useRelease";
+import { useTransactionToast } from "@/hooks/useTransactionToast";
+import { getPotStatus } from "@/lib/potStatus";
 import { TransactionStatus } from "./TransactionStatus";
 
 interface ReleaseButtonProps {
   potId: bigint;
 }
 
-/** Self-gating: renders nothing unless the connected wallet is the organizer,
- * the goal has been met, the pot isn't already released, and the deadline
- * hasn't passed — mirrors release()'s own require conditions exactly, so a
- * page can just always mount this and trust it to hide itself correctly. */
+/** Self-gating, mirroring release()'s own require conditions exactly via
+ * getPotStatus: renders nothing unless the connected wallet is the organizer
+ * and the pot's status is "goalReached" (which already implies not released
+ * and still before the deadline). */
 export function ReleaseButton({ potId }: ReleaseButtonProps) {
   const { address } = useAccount();
   const { pot, refetch } = usePot(potId);
   const { release, hash, isPending, isConfirming, isConfirmed, error } = useRelease();
+
+  useTransactionToast(isConfirmed, error, "Funds released to your wallet.");
 
   useEffect(() => {
     if (isConfirmed) refetch();
@@ -26,13 +30,7 @@ export function ReleaseButton({ potId }: ReleaseButtonProps) {
   if (!pot || !address) return null;
 
   const isOrganizer = address.toLowerCase() === pot.organizer.toLowerCase();
-  const targetMet = pot.totalContributed >= pot.targetAmount;
-  const nowSeconds = BigInt(Math.floor(Date.now() / 1000));
-  const beforeDeadline = nowSeconds <= pot.deadline;
-
-  if (!isOrganizer || pot.released || !targetMet || !beforeDeadline) {
-    return null;
-  }
+  if (!isOrganizer || getPotStatus(pot) !== "goalReached") return null;
 
   const isSubmitting = isPending || isConfirming;
 
