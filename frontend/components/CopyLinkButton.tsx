@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useToast } from "./Toast";
 
 interface CopyLinkButtonProps {
   potId: bigint;
@@ -8,12 +9,21 @@ interface CopyLinkButtonProps {
 
 export function CopyLinkButton({ potId }: CopyLinkButtonProps) {
   const [copied, setCopied] = useState(false);
+  const { showToast } = useToast();
 
   const handleCopy = async () => {
     const url = `${window.location.origin}/pot/${potId.toString()}`;
-    await navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+
+    // navigator.clipboard is unavailable in some non-secure contexts and
+    // restrictive in-app browser webviews — without this guard, a rejection
+    // here was an unhandled promise rejection with zero user feedback.
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      showToast("Couldn't copy automatically — copy the link from your address bar instead.", "error");
+    }
   };
 
   return (

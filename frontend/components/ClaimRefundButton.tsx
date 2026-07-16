@@ -33,26 +33,36 @@ export function ClaimRefundButton({ potId }: ClaimRefundButtonProps) {
     }
   }, [isConfirmed, refetchPot, refetchContribution]);
 
-  if (!pot || !address) return null;
-  if (getPotStatus(pot) !== "refundable" || contribution === 0n) return null;
+  const canClaim = Boolean(pot && address && getPotStatus(pot) === "refundable" && contribution > 0n);
 
-  const goalWasMet = pot.totalContributed >= pot.targetAmount;
+  // A disconnect (or any eligibility change) mid-flight must not erase an
+  // already-submitted transaction's status — only the offer to claim depends
+  // on current eligibility; a result already in progress doesn't.
+  const hasActiveTransaction = isPending || isConfirming || isConfirmed || Boolean(error);
+
+  if (!canClaim && !hasActiveTransaction) return null;
+
+  const goalWasMet = pot ? pot.totalContributed >= pot.targetAmount : false;
   const isSubmitting = isPending || isConfirming;
 
   return (
     <div className="space-y-2">
-      <p className="text-sm text-neutral-500">
-        {goalWasMet
-          ? "This pot reached its goal, but wasn't released before the deadline."
-          : "This pot didn't reach its goal in time."}
-      </p>
-      <button
-        onClick={() => claimRefund(potId)}
-        disabled={isSubmitting}
-        className="w-full rounded-full border border-neutral-300 px-4 py-3 font-medium text-neutral-900 transition-colors hover:bg-neutral-50 disabled:opacity-50"
-      >
-        {isSubmitting ? "Refunding…" : `Get your ${formatMon(contribution)} back`}
-      </button>
+      {canClaim && (
+        <>
+          <p className="text-sm text-neutral-500">
+            {goalWasMet
+              ? "This pot reached its goal, but wasn't released before the deadline."
+              : "This pot didn't reach its goal in time."}
+          </p>
+          <button
+            onClick={() => claimRefund(potId)}
+            disabled={isSubmitting}
+            className="w-full rounded-full border border-neutral-300 px-4 py-3 font-medium text-neutral-900 transition-colors hover:bg-neutral-50 disabled:opacity-50"
+          >
+            {isSubmitting ? "Refunding…" : `Get your ${formatMon(contribution)} back`}
+          </button>
+        </>
+      )}
       <TransactionStatus
         hash={hash}
         isPending={isPending}

@@ -60,14 +60,19 @@ export default function PotPage() {
 
           <PotProgress pot={pot} />
 
-          <CopyLinkButton potId={potId} />
+          <CopyLinkButton key={`copy-${potId}`} potId={potId} />
 
           {!pot.released && (
-            <ContributeForm potId={potId} remainingAmount={remainingAmount} onSuccess={refetch} />
+            <ContributeForm
+              key={`contribute-${potId}`}
+              potId={potId}
+              remainingAmount={remainingAmount}
+              onSuccess={refetch}
+            />
           )}
 
-          <ReleaseButton potId={potId} />
-          <ClaimRefundButton potId={potId} />
+          <ReleaseButton key={`release-${potId}`} potId={potId} />
+          <ClaimRefundButton key={`refund-${potId}`} potId={potId} />
 
           {pot.released && (
             <div className="rounded-2xl border border-dashed border-neutral-200 p-5 text-center">
