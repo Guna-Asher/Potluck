@@ -6,6 +6,7 @@ import { useContribute } from "@/hooks/useContribute";
 import { useTransactionToast } from "@/hooks/useTransactionToast";
 import { formatMon, parseMon } from "@/lib/format";
 import { TransactionStatus } from "./TransactionStatus";
+import { useToast } from "./Toast";
 
 interface ContributeFormProps {
   potId: bigint;
@@ -16,6 +17,7 @@ interface ContributeFormProps {
 export function ContributeForm({ potId, remainingAmount, onSuccess }: ContributeFormProps) {
   const { isConnected } = useAccount();
   const { contribute, hash, isPending, isConfirming, isConfirmed, error } = useContribute();
+  const { showToast } = useToast();
   const [amount, setAmount] = useState("");
 
   useTransactionToast(isConfirmed, error, "You're in — thanks for chipping in.");
@@ -32,7 +34,24 @@ export function ContributeForm({ potId, remainingAmount, onSuccess }: Contribute
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     if (!amount) return;
-    contribute(potId, parseMon(amount));
+
+    // Native number inputs accept values (e.g. scientific notation like
+    // "1e21") that parseEther can't handle — without this guard, a throw
+    // here would silently abort the submission with zero user feedback.
+    let parsedAmount: bigint;
+    try {
+      parsedAmount = parseMon(amount);
+    } catch {
+      showToast("That doesn't look like a valid amount.", "error");
+      return;
+    }
+
+    if (parsedAmount <= 0n) {
+      showToast("Enter an amount greater than zero.", "error");
+      return;
+    }
+
+    contribute(potId, parsedAmount);
   };
 
   return (

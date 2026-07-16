@@ -17,6 +17,7 @@ export function CreatePotForm() {
   const [description, setDescription] = useState("");
   const [goal, setGoal] = useState("");
   const [deadline, setDeadline] = useState("");
+  const [goalError, setGoalError] = useState<string | null>(null);
   const [deadlineError, setDeadlineError] = useState<string | null>(null);
 
   // "Now" as a floor so the picker won't offer a past moment — the contract's
@@ -33,8 +34,25 @@ export function CreatePotForm() {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
+    setGoalError(null);
     setDeadlineError(null);
     if (!title.trim() || !goal || !deadline) return;
+
+    // Native number inputs accept values (e.g. scientific notation like
+    // "1e21") that parseEther can't handle — without this guard, a throw
+    // here would silently abort the submission with zero user feedback.
+    let parsedGoal: bigint;
+    try {
+      parsedGoal = parseMon(goal);
+    } catch {
+      setGoalError("That doesn't look like a valid amount.");
+      return;
+    }
+
+    if (parsedGoal <= 0n) {
+      setGoalError("The goal needs to be more than zero.");
+      return;
+    }
 
     const deadlineDate = new Date(deadline);
 
@@ -44,7 +62,7 @@ export function CreatePotForm() {
     }
 
     const deadlineTimestamp = BigInt(Math.floor(deadlineDate.getTime() / 1000));
-    createPot(title.trim(), description.trim(), parseMon(goal), deadlineTimestamp);
+    createPot(title.trim(), description.trim(), parsedGoal, deadlineTimestamp);
   };
 
   const isSubmitting = isPending || isConfirming;
@@ -95,11 +113,15 @@ export function CreatePotForm() {
             min="0"
             step="any"
             value={goal}
-            onChange={(e) => setGoal(e.target.value)}
+            onChange={(e) => {
+              setGoal(e.target.value);
+              setGoalError(null);
+            }}
             placeholder="1200"
             required
             className="w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-neutral-900 outline-none focus:border-neutral-400"
           />
+          {goalError && <p className="text-sm text-red-600">{goalError}</p>}
         </div>
 
         <div className="space-y-1.5">

@@ -71,6 +71,10 @@ export function getFriendlyErrorMessage(error: unknown): string {
       return "Cancelled.";
     }
 
+    if (error.name === "ProviderNotFoundError") {
+      return "We couldn't find a wallet. Install the MetaMask extension and try again.";
+    }
+
     return error.shortMessage;
   }
 

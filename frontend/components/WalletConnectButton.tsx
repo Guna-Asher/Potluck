@@ -1,6 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { useToast } from "./Toast";
+import { getFriendlyErrorMessage } from "@/lib/format";
 
 function truncateAddress(address: string): string {
   return `${address.slice(0, 6)}…${address.slice(-4)}`;
@@ -8,8 +11,15 @@ function truncateAddress(address: string): string {
 
 export function WalletConnectButton() {
   const { address, isConnected } = useAccount();
-  const { connect, connectors, isPending } = useConnect();
+  const { connect, connectors, isPending, error } = useConnect();
   const { disconnect } = useDisconnect();
+  const { showToast } = useToast();
+
+  // Surfaces connection failures (rejected in MetaMask, MetaMask not
+  // installed, etc.) — previously silent, since `error` wasn't read at all.
+  useEffect(() => {
+    if (error) showToast(getFriendlyErrorMessage(error), "error");
+  }, [error, showToast]);
 
   if (isConnected && address) {
     return (
