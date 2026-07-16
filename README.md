@@ -23,6 +23,7 @@ Potluck is a trustless, onchain escrow for group money pools. Create a pot, shar
 - [The Solution](#the-solution)
 - [Why Blockchain Is Actually Needed](#why-blockchain-is-actually-needed)
 - [Features](#features)
+- [Design & Interaction](#design--interaction)
 - [Screenshots](#screenshots)
 - [User Flow](#user-flow)
 - [Architecture](#architecture)
@@ -75,18 +76,48 @@ Monad specifically makes this practical for casual group use: sub-second finalit
 
 ## Features
 
+**Core mechanics**
 - **Create funding pots** — title, description, MON goal, and deadline, deployed onchain in one transaction
 - **Shareable links** — a pot's ID is the whole URL; anyone can open it and see live status with no login
-- **MetaMask integration** — wallet connect, network detection, and guided network switching to Monad Testnet
-- **Live contribution tracking** — progress bar, amount raised, contributor count, and time remaining, read directly from the chain
+- **Live contribution tracking** — amount raised, goal, contributor count, and time remaining, polled directly from the chain every few seconds
 - **Goal-based release** — the organizer releases the full pot only once the goal is met and only before the deadline
 - **Automatic refund eligibility** — once the deadline passes without release, every contributor can reclaim their exact contribution
-- **Explorer links on every transaction** — every create, contribute, release, and refund links straight to Monadscan
 - **Multiple pots per organizer** — no limit on how many pots a single wallet can create or contribute to
-- **Pot history** — a local, per-device record of pots you've created or opened, so you can find your way back to them
 - **Fully onchain escrow** — no backend, no database of balances; the contract's state is the only source of truth
 
+**Wallet & transactions**
+- **MetaMask integration** — connect, disconnect, and automatic wrong-network detection with a guided switch to Monad Testnet
+- **Friendly error handling** — every contract revert (wrong network, insufficient balance, deadline passed, not the organizer, etc.) is mapped to plain-language copy instead of raw RPC errors
+- **Toast notifications** — a transient, app-wide toast confirms or explains the outcome of every wallet connection attempt, pot creation, contribution, release, and refund
+- **Resilient status display** — a transaction's pending/confirming/confirmed state stays visible even if the wallet disconnects mid-flow; only the option to take a new action depends on staying connected
+- **Explorer links on every transaction** — every create, contribute, release, and refund links straight to Monadscan for independent verification
+
+**Status & progress**
+- **Clear status badges** — every pot is always in exactly one of four states: **Funding Open**, **Goal Reached**, **Released**, or **Refund Available**
+- **Remaining-amount indicator** — the tracker shows exactly how much MON is left to hit the goal, not just a percentage
+- **Pot history dashboard** — a local, per-device record of pots you've created or opened (`/pots`), with schema-validated storage so a corrupted or hand-edited entry can't break the page
+
+**Reliability**
+- **Global error boundary** — an unexpected rendering error shows a recovery screen with a retry button instead of a blank page
+- **Mobile-first, responsive layout** — every page and component collapses cleanly to a single column below the `sm` breakpoint
+
+## Design & Interaction
+
+The frontend follows a small, deliberately consistent design system rather than ad hoc styling per page:
+
+- **One card shell** (`components/ui/Card.tsx`) — a shared shadow/border/radius recipe (`--shadow-card` design token) used by every card-based surface: forms, the progress tracker, dashboard tiles, action panels. An `interactive` variant adds a hover-lift for clickable cards.
+- **One page-header shell** (`components/ui/PageHeader.tsx`) — keeps heading size, weight, and subtitle color consistent across `/create` and `/pots` instead of each page re-deriving its own styles.
+- **Clear information architecture on the pot page** — an informational block (title, live progress, share link) is visually separated from the action zone (contribute, release, or claim a refund), so "what this pot is" and "what you can do about it" never blur together.
+- **Framer Motion micro-interactions**, used deliberately and sparingly:
+  - The progress bar fills from 0% on mount instead of snapping to its value.
+  - Transaction status cross-fades between pending → confirming → confirmed/error instead of jumping between messages.
+  - Toasts animate in and out (rather than just disappearing) via `AnimatePresence`.
+  - A lightweight per-navigation fade on page transitions.
+- Card hover-lift itself is plain CSS, not JavaScript — a hover this small doesn't need an animation library's runtime cost.
+
 ## Screenshots
+
+_Pending capture — placeholders below reflect the intended shape of this section._
 
 ![Landing Page](./docs/screenshots/landing.png)
 
@@ -134,7 +165,7 @@ sequenceDiagram
 
 ## Architecture
 
-Potluck is deliberately a two-tier system: a smart contract that owns every money-movement decision, and a static frontend that only reads and writes to that contract. There is no backend server and no database — the chain is the only source of truth for pot state and balances.
+Potluck is deliberately a two-tier system: a smart contract that owns every money-movement decision, and a static frontend that only reads and writes to that contract. There is no backend server and no database — the chain is the only source of truth for pot state and balances. A `localStorage`-backed pot history exists purely as a per-device convenience for finding your way back to a pot; it is never treated as authoritative.
 
 ```mermaid
 flowchart TD
@@ -142,6 +173,7 @@ flowchart TD
         UI["Next.js App (React 19)"]
         Wagmi["wagmi + viem"]
         MM["MetaMask Extension"]
+        LS["localStorage\n(pot history only)"]
     end
 
     subgraph Chain["Monad Testnet"]
@@ -154,11 +186,12 @@ flowchart TD
     Wagmi -->|JSON-RPC| MM
     MM -->|signed transactions| Contract
     Wagmi -->|polling reads| Contract
+    UI -.->|record/read visited pots| LS
     Contract -.->|verified source + tx history| Explorer
     UI -.->|"View on Explorer" links| Explorer
 ```
 
-**Frontend** — Next.js (App Router) + TypeScript. Two content routes (`/create`, `/pot/[potId]`) plus a local pot-history dashboard (`/pots`). Every number shown — amount raised, goal, deadline, contributor count — is read live from the contract, not cached in a database.
+**Frontend** — Next.js (App Router) + TypeScript. Four routes: the marketing landing page (`/`), pot creation (`/create`), the pot tracker (`/pot/[potId]`), and a local pot-history dashboard (`/pots`). Every number shown — amount raised, goal, deadline, contributor count — is read live from the contract, not cached in a database.
 
 **Smart Contract** — a single Solidity contract deployed once to Monad Testnet, holding every pot as a struct in a mapping. It is the sole source of truth for money and state transitions.
 
@@ -217,6 +250,7 @@ forge coverage --report summary --no-match-coverage "script|test/utils"
 | Chain interaction | wagmi v3, viem |
 | Wallet | MetaMask (via wagmi's `metaMask()` connector) |
 | Styling | Tailwind CSS v4 |
+| Animation | Framer Motion (progress fill, transaction-state transitions, toasts, page fades) |
 | Data fetching | @tanstack/react-query (via wagmi) |
 | Network | Monad Testnet |
 | Explorer | Monadscan |
@@ -327,29 +361,63 @@ Set `NEXT_PUBLIC_MONAD_RPC_URL` in your hosting provider's environment settings.
 ```
 potluck/
 ├── src/
-│   └── Potluck.sol              # The escrow contract
+│   └── Potluck.sol                  # The escrow contract
 ├── script/
-│   └── Deploy.s.sol             # Foundry deployment script
+│   └── Deploy.s.sol                 # Foundry deployment script
 ├── test/
-│   ├── Potluck.t.sol            # Unit + happy-path tests
-│   ├── PotluckEdgeCases.t.sol   # Boundary conditions
-│   ├── PotluckSecurity.t.sol    # Access control, griefing, invariants
-│   ├── PotluckReentrancy.t.sol  # Active reentrancy attempts
+│   ├── Potluck.t.sol                # Unit + happy-path tests
+│   ├── PotluckEdgeCases.t.sol       # Boundary conditions
+│   ├── PotluckSecurity.t.sol        # Access control, griefing, invariants
+│   ├── PotluckReentrancy.t.sol      # Active reentrancy attempts
 │   └── utils/
-│       └── Attackers.sol        # Test-double attacker contracts
+│       └── Attackers.sol            # Test-double attacker contracts
 ├── foundry.toml
 └── frontend/
     ├── app/
-    │   ├── page.tsx              # Landing page
-    │   ├── create/page.tsx       # Create-pot flow
-    │   ├── pot/[potId]/page.tsx  # Pot detail / tracker
-    │   ├── pots/page.tsx         # Local pot-history dashboard
-    │   ├── layout.tsx
-    │   ├── providers.tsx         # wagmi + react-query + toast providers
-    │   └── error.tsx             # Global error boundary
-    ├── components/                # UI components (forms, buttons, cards, badges)
-    ├── hooks/                     # Contract read/write hooks
-    ├── lib/                       # Contract config, chain config, formatting, pot status/history
+    │   ├── page.tsx                  # Marketing landing page
+    │   ├── create/page.tsx           # Create-pot flow
+    │   ├── pot/[potId]/page.tsx      # Pot detail / tracker
+    │   ├── pots/page.tsx             # Local pot-history dashboard
+    │   ├── layout.tsx                # Root layout (nav, network guard, page transitions)
+    │   ├── providers.tsx             # wagmi + react-query + toast providers
+    │   ├── error.tsx                 # Global error boundary
+    │   └── icon.tsx                  # Generated favicon
+    ├── components/
+    │   ├── ui/
+    │   │   ├── Card.tsx              # Shared card shell (shadow/border/radius)
+    │   │   └── PageHeader.tsx        # Shared page title/subtitle block
+    │   ├── CreatePotForm.tsx
+    │   ├── ContributeForm.tsx
+    │   ├── ReleaseButton.tsx
+    │   ├── ClaimRefundButton.tsx
+    │   ├── PotHeader.tsx
+    │   ├── PotProgress.tsx           # Progress bar, remaining amount, status badge
+    │   ├── PotStatusBadge.tsx        # Funding Open / Goal Reached / Released / Refund Available
+    │   ├── PotCard.tsx               # Dashboard tile for /pots
+    │   ├── CopyLinkButton.tsx
+    │   ├── TransactionStatus.tsx     # Pending/confirming/confirmed/error, animated
+    │   ├── Toast.tsx                 # App-wide toast notifications
+    │   ├── WalletConnectButton.tsx
+    │   ├── NetworkGuard.tsx          # Wrong-network banner + guided switch
+    │   ├── NavBar.tsx
+    │   ├── PageTransition.tsx        # Lightweight per-navigation fade
+    │   └── ExplorerLink.tsx
+    ├── hooks/
+    │   ├── usePot.ts                 # Polls getPot() every 4s
+    │   ├── useContribution.ts        # Polls getContribution() for the connected wallet
+    │   ├── useCreatePot.ts
+    │   ├── useContribute.ts
+    │   ├── useRelease.ts
+    │   ├── useClaimRefund.ts
+    │   ├── usePotHistory.ts          # Reads/writes the local pot-history list
+    │   └── useTransactionToast.ts
+    ├── lib/
+    │   ├── contract.ts               # Deployed address + ABI
+    │   ├── chain.ts                  # Monad Testnet chain definition
+    │   ├── wagmiConfig.ts            # MetaMask-only wagmi config
+    │   ├── format.ts                 # MON formatting, countdowns, error-message mapping
+    │   ├── potStatus.ts              # Single source of truth for pot lifecycle state
+    │   └── potHistory.ts             # localStorage read/write with schema validation
     └── package.json
 ```
 
@@ -359,6 +427,7 @@ potluck/
 - This is a **testnet** deployment. MON on Monad Testnet has no monetary value; the demo proves the mechanism, not a live financial guarantee.
 - The contract is immutable — there is no upgrade path, no admin key, and no pause function. Any future changes require a new deployment and migrating pots manually; this is a deliberate design choice, not a gap.
 - The frontend is a pure client for the contract: it has no backend, no database of balances, and no ability to misrepresent contract state to a user who checks Monadscan directly.
+- The local pot-history list (`localStorage`) is a per-device convenience only — it is validated on read so a corrupted or hand-edited entry is dropped rather than crashing the page, but it is never treated as a source of truth for money or pot state.
 - MetaMask is the only supported wallet in this build. No embedded wallets, no session keys, no gas sponsorship — every transaction is signed explicitly by the user.
 
 ## Future Improvements
