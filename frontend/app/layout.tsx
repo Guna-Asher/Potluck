@@ -5,6 +5,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { NavBar } from "@/components/NavBar";
 import { NetworkGuard } from "@/components/NetworkGuard";
+import { PageTransition } from "@/components/PageTransition";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -22,7 +23,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <div className="mx-auto max-w-4xl px-6">
             <NetworkGuard />
           </div>
-          {children}
+          <PageTransition>{children}</PageTransition>
         </Providers>
       </body>
     </html>

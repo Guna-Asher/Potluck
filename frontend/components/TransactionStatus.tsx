@@ -1,3 +1,6 @@
+"use client";
+
+import { AnimatePresence, motion } from "framer-motion";
 import { getFriendlyErrorMessage } from "@/lib/format";
 import { ExplorerLink } from "./ExplorerLink";
 
@@ -11,7 +14,9 @@ interface TransactionStatusProps {
 }
 
 /** The one place a raw wagmi/viem transaction state gets turned into copy a
- * non-crypto user can read — used by every write-flow component. */
+ * non-crypto user can read — used by every write-flow component. Each state
+ * transition (pending → confirming → confirmed/error) gets a small fade so
+ * the status doesn't just snap between messages. */
 export function TransactionStatus({
   hash,
   isPending,
@@ -20,31 +25,62 @@ export function TransactionStatus({
   error,
   confirmedLabel = "Done.",
 }: TransactionStatusProps) {
-  if (error) {
-    return <p className="text-sm text-red-600">{getFriendlyErrorMessage(error)}</p>;
-  }
+  const state = error ? "error" : isPending ? "pending" : isConfirming ? "confirming" : isConfirmed ? "confirmed" : "idle";
 
-  if (isPending) {
-    return <p className="text-sm text-neutral-500">Confirm in MetaMask…</p>;
-  }
+  return (
+    <AnimatePresence mode="wait">
+      {state === "error" && (
+        <motion.p
+          key="error"
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+          className="text-sm text-red-600"
+        >
+          {getFriendlyErrorMessage(error)}
+        </motion.p>
+      )}
 
-  if (isConfirming) {
-    return (
-      <div className="flex items-center gap-2 text-sm text-neutral-500">
-        <span>Waiting for confirmation…</span>
-        <ExplorerLink hash={hash} />
-      </div>
-    );
-  }
+      {state === "pending" && (
+        <motion.p
+          key="pending"
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+          className="text-sm text-neutral-500"
+        >
+          Confirm in MetaMask…
+        </motion.p>
+      )}
 
-  if (isConfirmed) {
-    return (
-      <div className="flex items-center gap-2 text-sm text-emerald-700">
-        <span>{confirmedLabel}</span>
-        <ExplorerLink hash={hash} />
-      </div>
-    );
-  }
+      {state === "confirming" && (
+        <motion.div
+          key="confirming"
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+          className="flex items-center gap-2 text-sm text-neutral-500"
+        >
+          <span>Waiting for confirmation…</span>
+          <ExplorerLink hash={hash} />
+        </motion.div>
+      )}
 
-  return null;
+      {state === "confirmed" && (
+        <motion.div
+          key="confirmed"
+          initial={{ opacity: 0, y: 4, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+          className="flex items-center gap-2 text-sm text-emerald-700"
+        >
+          <span>{confirmedLabel}</span>
+          <ExplorerLink hash={hash} />
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 }
