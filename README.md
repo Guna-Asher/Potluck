@@ -10,10 +10,10 @@ Potluck is a trustless, onchain escrow for group money pools. Create a pot, shar
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)](./frontend)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](./LICENSE)
 
-[Live Demo](#) · [Demo Video](#) · [Contract on Monadscan](https://testnet.monadscan.com/address/0xA4C72147682a2E56A5e4344befcB5eddec2fa3a1)
+[Contract on Monadscan](https://testnet.monadscan.com/address/0xA4C72147682a2E56A5e4344befcB5eddec2fa3a1)
 
-> 🎥 **Demo video:** `[link to be added]`
-> 🔗 **Live app:** `[link to be added]`
+> 🎥 **Demo video:** _link to be added_
+> 🔗 **Live app:** _link to be added_
 
 ---
 
@@ -43,7 +43,7 @@ Potluck is a trustless, onchain escrow for group money pools. Create a pot, shar
 
 Group money is always the same story: a trip house, concert tickets, an Airbnb, a shared gift, a bulk order. One person fronts the full cost, then spends the next two weeks chasing everyone else for their share.
 
-Tools like Splitwise help you track *who owes what* — but they don't move money, and they can't enforce anything. Payment apps like Venmo move money, but once you send it, it's gone. There's no concept of "collect from everyone by Friday, or give it all back."
+Tools like Splitwise help you track _who owes what_ — but they don't move money, and they can't enforce anything. Payment apps like Venmo move money, but once you send it, it's gone. There's no concept of "collect from everyone by Friday, or give it all back."
 
 The organizer is always the one holding the risk: if the plan falls through after they've already paid a non-refundable deposit, they eat the loss alone.
 
@@ -62,7 +62,7 @@ Nobody — not the organizer, not Potluck — ever has custody of the money in b
 
 ## Why Blockchain Is Actually Needed
 
-This isn't blockchain for its own sake. The core guarantee — *"the money either goes to the organizer under the agreed conditions, or comes back to me, and neither of us can change that"* — is exactly the kind of neutral, tamper-proof custody a smart contract is for.
+This isn't blockchain for its own sake. The core guarantee — _"the money either goes to the organizer under the agreed conditions, or comes back to me, and neither of us can change that"_ — is exactly the kind of neutral, tamper-proof custody a smart contract is for.
 
 | Without a blockchain | With Potluck |
 |---|---|
@@ -168,7 +168,7 @@ flowchart TD
 
 ## Smart Contract
 
-| | |
+| Field | Value |
 |---|---|
 | **Address** | [`0xA4C72147682a2E56A5e4344befcB5eddec2fa3a1`](https://testnet.monadscan.com/address/0xA4C72147682a2E56A5e4344befcB5eddec2fa3a1) |
 | **Network** | Monad Testnet (chain ID `10143`) |
@@ -195,7 +195,7 @@ Contributions are tracked per-address (not as a single boolean), so refunds retu
 
 ### Security design
 
-- **Checks-effects-interactions** in both `release()` and `claimRefund()` — state (`released` flag, or the caller's zeroed contribution) is written *before* the external MON transfer, so a reentrant call from a malicious recipient hits an already-updated guard instead of draining funds.
+- **Checks-effects-interactions** in both `release()` and `claimRefund()` — state (`released` flag, or the caller's zeroed contribution) is written _before_ the external MON transfer, so a reentrant call from a malicious recipient hits an already-updated guard instead of draining funds.
 - **Low-level `.call` with explicit success check** for every transfer, reverting with `TransferFailed` on failure, rather than relying on `.transfer()`'s fixed gas stipend.
 - **Custom errors** (`InvalidPotId`, `NotOrganizer`, `TargetNotMet`, `DeadlinePassed`, `DeadlineNotReached`, `AlreadyReleased`, `NoContribution`, `ZeroTarget`, `ZeroValue`, `TransferFailed`, `DeadlineInPast`) instead of require-strings — cheaper on Monad's gas model and self-documenting for auditors.
 - **No admin, no upgradeability, no pause switch** — the contract is immutable by design. Removing every centralization point was a deliberate tradeoff in favor of the "no one controls the funds" claim, not an oversight.
@@ -374,10 +374,10 @@ potluck/
 
 Built solo for the **Monad BuildAnything Hackathon**.
 
-| | |
+| Field | Value |
 |---|---|
-| **Demo video** | `[link to be added]` |
-| **Live app** | `[link to be added]` |
+| **Demo video** | _link to be added_ |
+| **Live app** | _link to be added_ |
 | **Contract address** | [`0xA4C72147682a2E56A5e4344befcB5eddec2fa3a1`](https://testnet.monadscan.com/address/0xA4C72147682a2E56A5e4344befcB5eddec2fa3a1) |
 | **Network** | Monad Testnet |
 | **Team** | Solo builder |
