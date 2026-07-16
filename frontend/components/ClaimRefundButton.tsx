@@ -8,6 +8,7 @@ import { useClaimRefund } from "@/hooks/useClaimRefund";
 import { useTransactionToast } from "@/hooks/useTransactionToast";
 import { getPotStatus } from "@/lib/potStatus";
 import { formatMon } from "@/lib/format";
+import { Card } from "./ui/Card";
 import { TransactionStatus } from "./TransactionStatus";
 
 interface ClaimRefundButtonProps {
@@ -45,24 +46,8 @@ export function ClaimRefundButton({ potId }: ClaimRefundButtonProps) {
   const goalWasMet = pot ? pot.totalContributed >= pot.targetAmount : false;
   const isSubmitting = isPending || isConfirming;
 
-  return (
-    <div className="space-y-2">
-      {canClaim && (
-        <>
-          <p className="text-sm text-neutral-500">
-            {goalWasMet
-              ? "This pot reached its goal, but wasn't released before the deadline."
-              : "This pot didn't reach its goal in time."}
-          </p>
-          <button
-            onClick={() => claimRefund(potId)}
-            disabled={isSubmitting}
-            className="w-full rounded-full border border-neutral-300 px-4 py-3 font-medium text-neutral-900 transition-colors hover:bg-neutral-50 disabled:opacity-50"
-          >
-            {isSubmitting ? "Refunding…" : `Get your ${formatMon(contribution)} back`}
-          </button>
-        </>
-      )}
+  if (!canClaim) {
+    return (
       <TransactionStatus
         hash={hash}
         isPending={isPending}
@@ -71,6 +56,35 @@ export function ClaimRefundButton({ potId }: ClaimRefundButtonProps) {
         error={error}
         confirmedLabel="Refunded to your wallet."
       />
-    </div>
+    );
+  }
+
+  return (
+    <Card className="space-y-4">
+      <div className="space-y-1">
+        <h3 className="font-semibold text-neutral-900">Refund available</h3>
+        <p className="text-sm leading-relaxed text-neutral-500">
+          {goalWasMet
+            ? "This pot reached its goal, but wasn't released before the deadline."
+            : "This pot didn't reach its goal in time."}{" "}
+          You can claim back exactly what you contributed.
+        </p>
+      </div>
+      <button
+        onClick={() => claimRefund(potId)}
+        disabled={isSubmitting}
+        className="w-full rounded-full border border-neutral-300 px-5 py-3 font-medium text-neutral-900 transition-colors hover:bg-neutral-50 disabled:opacity-50"
+      >
+        {isSubmitting ? "Refunding…" : `Get your ${formatMon(contribution)} back`}
+      </button>
+      <TransactionStatus
+        hash={hash}
+        isPending={isPending}
+        isConfirming={isConfirming}
+        isConfirmed={isConfirmed}
+        error={error}
+        confirmedLabel="Refunded to your wallet."
+      />
+    </Card>
   );
 }

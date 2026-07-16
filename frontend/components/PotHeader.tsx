@@ -12,20 +12,20 @@ function truncateAddress(address: string): string {
 
 export function PotHeader({ title, description, organizer }: PotHeaderProps) {
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-2">
       <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl">{title}</h1>
-      {description && <p className="text-neutral-500">{description}</p>}
-      <p className="text-xs text-neutral-400">
-        Organized by {truncateAddress(organizer)} ·{" "}
+      {description && <p className="text-base leading-relaxed text-neutral-500">{description}</p>}
+      <div className="inline-flex items-center gap-1.5 rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-500">
+        <span>Organized by {truncateAddress(organizer)}</span>
         <a
           href={`${monadTestnet.blockExplorers.default.url}/address/${organizer}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="underline decoration-neutral-300 underline-offset-2 hover:text-neutral-600"
+          className="text-neutral-400 underline decoration-neutral-300 underline-offset-2 hover:text-neutral-700"
         >
           view
         </a>
-      </p>
+      </div>
     </div>
   );
 }

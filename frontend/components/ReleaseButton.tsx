@@ -6,6 +6,7 @@ import { usePot } from "@/hooks/usePot";
 import { useRelease } from "@/hooks/useRelease";
 import { useTransactionToast } from "@/hooks/useTransactionToast";
 import { getPotStatus } from "@/lib/potStatus";
+import { Card } from "./ui/Card";
 import { TransactionStatus } from "./TransactionStatus";
 
 interface ReleaseButtonProps {
@@ -39,17 +40,8 @@ export function ReleaseButton({ potId }: ReleaseButtonProps) {
 
   const isSubmitting = isPending || isConfirming;
 
-  return (
-    <div className="space-y-2">
-      {canRelease && (
-        <button
-          onClick={() => release(potId)}
-          disabled={isSubmitting}
-          className="w-full rounded-full bg-emerald-600 px-4 py-3 font-medium text-white transition-colors hover:bg-emerald-700 disabled:opacity-50"
-        >
-          {isSubmitting ? "Releasing…" : "Release funds to yourself"}
-        </button>
-      )}
+  if (!canRelease) {
+    return (
       <TransactionStatus
         hash={hash}
         isPending={isPending}
@@ -58,6 +50,33 @@ export function ReleaseButton({ potId }: ReleaseButtonProps) {
         error={error}
         confirmedLabel="Funds released to your wallet."
       />
-    </div>
+    );
+  }
+
+  return (
+    <Card className="space-y-4">
+      <div className="space-y-1">
+        <h3 className="font-semibold text-neutral-900">Goal reached</h3>
+        <p className="text-sm leading-relaxed text-neutral-500">
+          This pot hit its goal before the deadline. Release the full balance to your wallet whenever
+          you&rsquo;re ready.
+        </p>
+      </div>
+      <button
+        onClick={() => release(potId)}
+        disabled={isSubmitting}
+        className="w-full rounded-full bg-emerald-600 px-5 py-3 font-medium text-white transition-colors hover:bg-emerald-700 disabled:opacity-50"
+      >
+        {isSubmitting ? "Releasing…" : "Release funds to yourself"}
+      </button>
+      <TransactionStatus
+        hash={hash}
+        isPending={isPending}
+        isConfirming={isConfirming}
+        isConfirmed={isConfirmed}
+        error={error}
+        confirmedLabel="Funds released to your wallet."
+      />
+    </Card>
   );
 }

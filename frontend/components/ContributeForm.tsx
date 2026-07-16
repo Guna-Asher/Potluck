@@ -56,7 +56,7 @@ export function ContributeForm({ potId, remainingAmount, onSuccess }: Contribute
 
   return (
     <form
-      className="space-y-3 rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm sm:p-6"
+      className="space-y-4 rounded-2xl border border-neutral-200/70 bg-white p-6 shadow-card sm:p-7"
       onSubmit={handleSubmit}
     >
       <div className="flex items-baseline justify-between">
@@ -67,7 +67,7 @@ export function ContributeForm({ potId, remainingAmount, onSuccess }: Contribute
           <span className="text-xs text-neutral-400">{formatMon(remainingAmount)} still needed</span>
         )}
       </div>
-      <div className="flex flex-col gap-2 sm:flex-row">
+      <div className="flex flex-col gap-3 sm:flex-row">
         <input
           id="amount"
           type="number"
@@ -77,7 +77,7 @@ export function ContributeForm({ potId, remainingAmount, onSuccess }: Contribute
           onChange={(e) => setAmount(e.target.value)}
           placeholder="Amount in MON"
           required
-          className="flex-1 rounded-xl border border-neutral-200 px-3.5 py-2.5 text-neutral-900 outline-none focus:border-neutral-400"
+          className="flex-1 rounded-xl border border-neutral-200 px-3.5 py-2.5 text-neutral-900 outline-none transition-shadow focus:border-neutral-400 focus:ring-4 focus:ring-neutral-900/5"
         />
         <button
           type="submit"

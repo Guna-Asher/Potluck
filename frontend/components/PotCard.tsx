@@ -16,10 +16,11 @@ interface PotCardProps {
 export function PotCard({ potId, role, fallbackTitle }: PotCardProps) {
   const { pot, isLoading } = usePot(potId);
   const percentage = pot ? calculateProgress(pot.totalContributed, pot.targetAmount) : 0;
+  const goalMet = percentage >= 100;
 
   return (
-    <Link href={`/pot/${potId.toString()}`} className="block transition-transform hover:-translate-y-0.5">
-      <Card className="h-full space-y-3">
+    <Link href={`/pot/${potId.toString()}`} className="block">
+      <Card interactive className="h-full space-y-4">
         <div className="flex items-start justify-between gap-2">
           <h3 className="line-clamp-1 font-semibold text-neutral-900">{pot?.title ?? fallbackTitle}</h3>
           {pot && <PotStatusBadge pot={pot} />}
@@ -27,21 +28,22 @@ export function PotCard({ potId, role, fallbackTitle }: PotCardProps) {
 
         {pot ? (
           <>
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-neutral-100">
+            <div className="h-2 w-full overflow-hidden rounded-full bg-neutral-100">
               <div
-                className="h-full rounded-full bg-emerald-500 transition-all"
+                className={`h-full rounded-full ${goalMet ? "bg-emerald-500" : "bg-blue-400"}`}
                 style={{ width: `${percentage}%` }}
               />
             </div>
-            <p className="text-sm text-neutral-500">
-              {formatMon(pot.totalContributed)} of {formatMon(pot.targetAmount)}
-            </p>
+            <div className="flex items-center justify-between text-sm">
+              <span className="font-medium text-neutral-700">{formatMon(pot.totalContributed)}</span>
+              <span className="text-neutral-400">of {formatMon(pot.targetAmount)}</span>
+            </div>
           </>
         ) : (
           <p className="text-sm text-neutral-400">{isLoading ? "Loading…" : "Unavailable right now"}</p>
         )}
 
-        <span className="inline-flex items-center text-xs font-medium text-neutral-400">
+        <span className="inline-flex items-center border-t border-neutral-100 pt-3 text-xs font-medium text-neutral-400">
           {role === "organizer" ? "You organized this" : "You contributed"}
         </span>
       </Card>

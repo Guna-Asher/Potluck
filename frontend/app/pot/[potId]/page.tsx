@@ -12,6 +12,7 @@ import { ContributeForm } from "@/components/ContributeForm";
 import { ReleaseButton } from "@/components/ReleaseButton";
 import { ClaimRefundButton } from "@/components/ClaimRefundButton";
 import { CopyLinkButton } from "@/components/CopyLinkButton";
+import { getPotStatus } from "@/lib/potStatus";
 
 export default function PotPage() {
   const params = useParams<{ potId: string }>();
@@ -45,7 +46,7 @@ export default function PotPage() {
     pot && pot.targetAmount > pot.totalContributed ? pot.targetAmount - pot.totalContributed : undefined;
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-lg flex-col gap-5 px-6 py-8 sm:py-12">
+    <main className="mx-auto flex min-h-screen max-w-lg flex-col gap-6 px-6 py-10 sm:py-16">
       {potId === undefined && <p className="text-neutral-500">That doesn&rsquo;t look like a valid pot link.</p>}
 
       {potId !== undefined && isLoading && <p className="text-neutral-500">Loading pot…</p>}
@@ -56,32 +57,39 @@ export default function PotPage() {
 
       {pot && potId !== undefined && (
         <>
-          <PotHeader title={pot.title} description={pot.description} organizer={pot.organizer} />
+          {/* Informational block — what this pot is and where it stands */}
+          <div className="space-y-5">
+            <PotHeader title={pot.title} description={pot.description} organizer={pot.organizer} />
+            <PotProgress pot={pot} />
+            <CopyLinkButton key={`copy-${potId}`} potId={potId} />
+          </div>
 
-          <PotProgress pot={pot} />
+          {/* Action zone — what you can do about it right now */}
+          <div className="space-y-4 border-t border-neutral-200 pt-6">
+            {/* Contributing is only ever contractually valid while the pot is
+                still open — showing this form once refunds are available would
+                directly contradict the status badge above it. */}
+            {(getPotStatus(pot) === "active" || getPotStatus(pot) === "goalReached") && (
+              <ContributeForm
+                key={`contribute-${potId}`}
+                potId={potId}
+                remainingAmount={remainingAmount}
+                onSuccess={refetch}
+              />
+            )}
 
-          <CopyLinkButton key={`copy-${potId}`} potId={potId} />
+            <ReleaseButton key={`release-${potId}`} potId={potId} />
+            <ClaimRefundButton key={`refund-${potId}`} potId={potId} />
 
-          {!pot.released && (
-            <ContributeForm
-              key={`contribute-${potId}`}
-              potId={potId}
-              remainingAmount={remainingAmount}
-              onSuccess={refetch}
-            />
-          )}
-
-          <ReleaseButton key={`release-${potId}`} potId={potId} />
-          <ClaimRefundButton key={`refund-${potId}`} potId={potId} />
-
-          {pot.released && (
-            <div className="rounded-2xl border border-dashed border-neutral-200 p-5 text-center">
-              <p className="text-neutral-500">🎉 All done here.</p>
-              <Link href="/create" className="mt-1 inline-block font-medium text-emerald-700 hover:underline">
-                Create another pot →
-              </Link>
-            </div>
-          )}
+            {pot.released && (
+              <div className="rounded-2xl border border-dashed border-neutral-300 p-6 text-center">
+                <p className="text-neutral-500">🎉 All done here.</p>
+                <Link href="/create" className="mt-1 inline-block font-medium text-emerald-700 hover:underline">
+                  Create another pot →
+                </Link>
+              </div>
+            )}
+          </div>
         </>
       )}
     </main>
