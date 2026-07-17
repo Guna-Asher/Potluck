@@ -54,7 +54,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   NotOrganizer: "Only the person who created this pot can release it.",
   TargetNotMet: "This pot hasn't reached its goal yet.",
   NoContribution: "It looks like you haven't put anything into this pot.",
-  TransferFailed: "The transfer didn't go through. Please try again.",
+  TransferFailed: "That didn't go through. Try again in a bit.",
 };
 
 export function getFriendlyErrorMessage(error: unknown): string {

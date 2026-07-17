@@ -24,16 +24,16 @@ const STEPS = [
 
 const TRUST_PILLARS = [
   {
-    title: "No custodian",
-    description: "Contributions sit in the contract, not in anyone's wallet, until the goal is met or the deadline passes.",
+    title: "No one holds your money",
+    description: "Your contribution doesn't sit in the organizer's wallet. It's locked up until the goal is hit or the deadline passes — then it moves on its own.",
   },
   {
-    title: "Verified & immutable",
-    description: "The contract's source is public and verified on Monadscan. No admin key, no upgrade path.",
+    title: "Nobody can change the rules",
+    description: "Once a pot is live, no one — including us — can edit how it works or sneak in a backdoor. Anyone can check the code for themselves.",
   },
   {
-    title: "Every transaction public",
-    description: "Every create, contribute, release, and refund is a transaction anyone can inspect — including you.",
+    title: "Nothing happens behind closed doors",
+    description: "Every pot, every contribution, every payout — anyone can look it up, any time.",
   },
 ];
 
@@ -82,7 +82,7 @@ export default function HomePage() {
               Live on Monad Testnet
             </span>
             <span className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600">
-              Contract verified
+              Code is public
             </span>
           </div>
 
@@ -112,8 +112,8 @@ export default function HomePage() {
           </div>
 
           <p className="text-sm text-neutral-400">
-            No signup to view a pot &nbsp;·&nbsp; Secured by smart contract escrow &nbsp;·&nbsp;
-            Every transaction verifiable onchain
+            No sign-up to peek at a pot &nbsp;·&nbsp; No one can walk off with the money &nbsp;·&nbsp;
+            Every payment is out in the open
           </p>
         </div>
 
@@ -133,8 +133,8 @@ export default function HomePage() {
             </div>
 
             <div className="rounded-2xl border-2 border-emerald-200 bg-emerald-50 px-5 py-4 text-center shadow-sm sm:flex-1">
-              <p className="text-sm font-semibold text-emerald-800">Smart Contract Escrow</p>
-              <p className="mt-0.5 text-xs text-emerald-700/70">Holds the pot until goal or deadline</p>
+              <p className="text-sm font-semibold text-emerald-800">The Pot</p>
+              <p className="mt-0.5 text-xs text-emerald-700/70">Locked up until the goal&rsquo;s hit or time runs out</p>
             </div>
 
             <div className="flex items-center justify-center py-1 sm:w-12 sm:py-0">
@@ -157,7 +157,7 @@ export default function HomePage() {
         <div className="flex flex-col gap-3 sm:items-center sm:text-center">
           <span className="text-sm font-medium text-emerald-700">How it works</span>
           <h2 className="text-3xl font-semibold tracking-tight text-neutral-900 sm:text-4xl">
-            From shared expense to settled pot in four steps
+            How a pot goes from empty to paid out
           </h2>
         </div>
 
@@ -180,11 +180,11 @@ export default function HomePage() {
           <div className="flex flex-col gap-3 sm:items-center sm:text-center">
             <span className="text-sm font-medium text-emerald-700">Trust</span>
             <h2 className="text-3xl font-semibold tracking-tight text-neutral-900 sm:text-4xl">
-              Funds secured by smart contract escrow
+              No one can walk off with the money
             </h2>
             <p className="max-w-xl text-neutral-500 sm:text-lg">
-              Nobody holds the money in between — not the organizer, not Potluck. The contract
-              does, and its rules can&rsquo;t change after the fact.
+              Nobody holds the money in between — not the organizer, not Potluck. The pot&rsquo;s
+              own rules decide what happens to it, and that can&rsquo;t change after the fact.
             </p>
           </div>
 
@@ -204,7 +204,7 @@ export default function HomePage() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-5 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
             >
-              View verified contract
+              See the code for yourself
               <code className="text-neutral-400">{truncateAddress(POTLUCK_ADDRESS)}</code>
               <span aria-hidden>↗</span>
             </a>
@@ -243,7 +243,7 @@ export default function HomePage() {
             Stop fronting the money. Start a pot.
           </h2>
           <p className="max-w-md text-neutral-400">
-            Free to try on Monad Testnet. No signup, no custodian, no chasing people down.
+            Free to try right now. No sign-up, no middleman, no chasing anyone down.
           </p>
           <Link
             href="/create"
@@ -261,7 +261,7 @@ export default function HomePage() {
             <span className="flex h-6 w-6 items-center justify-center rounded-md bg-emerald-600 text-xs font-bold text-white">
               P
             </span>
-            <span>Potluck — built for the Monad BuildAnything Hackathon</span>
+            <span>Potluck — a simple way to split money with a group</span>
           </div>
           <a
             href={`${monadTestnet.blockExplorers.default.url}/address/${POTLUCK_ADDRESS}`}

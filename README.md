@@ -2,7 +2,7 @@
 
 **Stop being the friend group's bank.**
 
-Potluck is a trustless, onchain escrow for group money pools. Create a pot, share a link, and let a smart contract — not a person — decide whether the money gets released or refunded.
+Potluck is a shared pot for group money — trips, gifts, bulk orders, whatever. Everyone chips in. The money only moves once the group hits its goal, and if it doesn't, everyone gets their money back automatically. Nobody — not the organizer, not us — can touch it in between.
 
 [![Monad Testnet](https://img.shields.io/badge/Monad-Testnet-836EF9?style=flat-square)](https://testnet.monadscan.com/address/0xA4C72147682a2E56A5e4344befcB5eddec2fa3a1)
 [![Contract Verified](https://img.shields.io/badge/Contract-Verified-brightgreen?style=flat-square)](https://testnet.monadscan.com/address/0xA4C72147682a2E56A5e4344befcB5eddec2fa3a1)
@@ -22,7 +22,7 @@ Potluck is a trustless, onchain escrow for group money pools. Create a pot, shar
 
 - [The Problem](#the-problem)
 - [The Solution](#the-solution)
-- [Why Blockchain Is Actually Needed](#why-blockchain-is-actually-needed)
+- [Why Not Just Use Venmo or Splitwise?](#why-not-just-use-venmo-or-splitwise)
 - [How It Works](#how-it-works)
 - [Features](#features)
 - [Architecture](#architecture)
@@ -58,20 +58,15 @@ Potluck replaces the honor system with a smart contract.
    - **Goal met before the deadline** → the organizer releases the full pot to themselves.
    - **Goal missed** → every contributor claims back exactly what they put in — no request, no approval, no organizer involved.
 
-Nobody — not the organizer, not Potluck — ever has custody of the money in between. The contract does.
+Nobody — not the organizer, not us — can touch the money while it's sitting there. Only the pot's own rules decide what happens to it.
 
-## Why Blockchain Is Actually Needed
+## Why Not Just Use Venmo or Splitwise?
 
-This isn't blockchain for its own sake. The core guarantee — *"the money either goes to the organizer under the agreed conditions, or comes back to me, and neither of us can change that"* — is exactly the kind of neutral, tamper-proof custody a smart contract is for.
+Because neither one can hold money and wait. Splitwise only tracks the math. Venmo only moves money on the spot, one send at a time — someone still has to collect it, hold it, and be trusted to hand it back if the plan falls apart.
 
-| Without a blockchain | With Potluck |
-|---|---|
-| The organizer holds the money — contributors must trust them not to spend it or disappear | The contract holds the money — no individual ever has custody |
-| A payment company could hold funds, but takes a cut and sets its own refund policy | Refund logic is public, immutable code — not a company's discretion |
-| "I'll pay you back if it doesn't work out" is a promise | Refund eligibility is a `require`/custom-error check, not a promise |
-| Trust has to be established in every new group, every time | Trust is in the contract, verifiable by anyone, every time |
+With Potluck, the money itself sits in the pot, not in a person's account, until the goal is hit or the deadline passes. The rules for releasing or refunding it can't be bent — not by the organizer, not by us.
 
-Monad specifically makes this practical for casual group use: sub-second finality and low fees mean a $10 contribution doesn't feel like a chore, and a group of 8 people each sending a small transaction is fast and cheap enough to actually feel like Venmo.
+Monad is what makes this practical for a $10 group chip-in instead of just big transactions: it confirms in under a second and costs fractions of a cent, so a group of eight people each sending a small amount feels as fast and cheap as Venmo.
 
 ## How It Works
 

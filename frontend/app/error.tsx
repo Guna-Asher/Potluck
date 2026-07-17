@@ -18,7 +18,7 @@ export default function Error({
       <div className="space-y-2">
         <h1 className="text-2xl font-semibold text-neutral-900">Something went wrong</h1>
         <p className="text-neutral-500">
-          That wasn&rsquo;t supposed to happen. Nothing on-chain was affected — give it another try.
+          That wasn&rsquo;t supposed to happen. Your money&rsquo;s safe — nothing was sent. Give it another try.
         </p>
       </div>
       <button
