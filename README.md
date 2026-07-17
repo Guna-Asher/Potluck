@@ -366,6 +366,7 @@ potluck/
 | MetaMask-only wallet support | Single injected connector, built for the demo | WalletConnect / Coinbase Wallet as additional connectors |
 | `/pots` is local, per-browser history | No indexer — `localStorage` only, resets if you clear browser data | An indexer or subgraph for a full, cross-device, per-wallet pot history |
 | No frontend automated test suite | Contract logic is heavily tested; UI is verified manually plus TypeScript/ESLint | Component and integration tests for the write flows |
+| The pot-wide status badge still reads "Refund Available" even once every contributor has claimed — each wallet does see its own accurate "Refund available" vs. "Refund claimed" locally | The contract tracks no aggregate refund counter, and deriving one client-side would mean scanning full event history — the default RPC caps `eth_getLogs` at a 100-block range, so that isn't a single-call operation | Either a small contract addition (a `totalRefunded` counter, read in O(1)) or indexed event infrastructure. Both are deferred intentionally, to avoid redeploying the current verified contract or compromising the fully on-chain, no-backend architecture for one badge label |
 
 None of this affects the contract's core guarantee — the escrow logic itself is fully tested and
 immutable regardless of what the frontend does or doesn't have yet.
