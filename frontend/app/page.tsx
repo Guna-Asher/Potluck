@@ -1,12 +1,15 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
+import { Reveal } from "@/components/landing/Reveal";
+import { CountUpNumber } from "@/components/landing/CountUpNumber";
+import { HeroPotPreview } from "@/components/landing/HeroPotPreview";
 import { POTLUCK_ADDRESS } from "@/lib/contract";
 import { monadTestnet } from "@/lib/chain";
 
 const STEPS = [
   {
     title: "Create a pot",
-    description: "Set a title, a MON goal, and a deadline. Deployed onchain in one transaction.",
+    description: "Set a title, a MON goal, and a deadline. It goes live in one transaction.",
   },
   {
     title: "Share the link",
@@ -22,41 +25,26 @@ const STEPS = [
   },
 ];
 
-const TRUST_PILLARS = [
-  {
-    title: "No one holds your money",
-    description: "Your contribution doesn't sit in the organizer's wallet. It's locked up until the goal is hit or the deadline passes — then it moves on its own.",
-  },
-  {
-    title: "Nobody can change the rules",
-    description: "Once a pot is live, no one — including us — can edit how it works or sneak in a backdoor. Anyone can check the code for themselves.",
-  },
-  {
-    title: "Nothing happens behind closed doors",
-    description: "Every pot, every contribution, every payout — anyone can look it up, any time.",
-  },
+const CREDIBILITY_ITEMS = ["Contract Verified", "Live on Monad Testnet", "Open Source (MIT)", "No Admin Keys"];
+
+const TRUST_POINTS = [
+  "No one holds your money — it sits in the pot until it's paid out or refunded.",
+  "Nobody can change the rules once a pot is live — not the organizer, not us.",
+  "Every pot, every payment, every payout is public. Check it yourself, any time.",
 ];
 
 const USE_CASES = [
   {
-    icon: "🏖️",
-    title: "Trip or Airbnb",
-    description: "Splitting a rental for a weekend away? Share the link and stop fronting the deposit alone.",
+    quote: "“Nobody wants to book the Airbnb until everyone's actually paid.”",
+    context: "Trip deposits",
   },
   {
-    icon: "🎫",
-    title: "Concert or event tickets",
-    description: "Coordinate a group booking without one card taking the full hit if plans fall through.",
+    quote: "“One person's card is eating the risk if the show gets cancelled.”",
+    context: "Concert tickets",
   },
   {
-    icon: "🎁",
-    title: "Group gifts",
-    description: "Chip in for a gift together — if the group doesn't hit the goal, nobody's out the money they sent.",
-  },
-  {
-    icon: "📦",
-    title: "Bulk or team orders",
-    description: "Collect everyone's share before you commit to buying, not after.",
+    quote: "“We all said we'd chip in for the gift — two people never did.”",
+    context: "Group gifts",
   },
 ];
 
@@ -64,7 +52,23 @@ function truncateAddress(address: string): string {
   return `${address.slice(0, 6)}…${address.slice(-4)}`;
 }
 
+function CheckIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path
+        d="M3 8.5L6.5 12L13 4.5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export default function HomePage() {
+  const explorerUrl = `${monadTestnet.blockExplorers.default.url}/address/${POTLUCK_ADDRESS}`;
+
   return (
     <main className="flex flex-col">
       {/* Hero */}
@@ -76,16 +80,7 @@ export default function HomePage() {
           <div className="h-[28rem] w-[28rem] rounded-full bg-emerald-200/40 blur-3xl sm:h-[36rem] sm:w-[36rem]" />
         </div>
 
-        <div className="mx-auto flex max-w-4xl flex-col items-start gap-6 px-6 pt-12 sm:items-center sm:pt-20 sm:text-center lg:pt-28">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
-              Live on Monad Testnet
-            </span>
-            <span className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600">
-              Code is public
-            </span>
-          </div>
-
+        <div className="mx-auto flex max-w-4xl flex-col items-start gap-6 px-6 pt-16 sm:items-center sm:pt-24 sm:text-center lg:pt-32">
           <h1 className="max-w-3xl text-5xl font-semibold leading-[1.05] tracking-tight text-neutral-900 sm:text-6xl lg:text-7xl">
             Stop being the friend group&rsquo;s bank.
           </h1>
@@ -117,36 +112,59 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* Abstract escrow flow — illustrates the mechanism, not live data */}
-        <div className="mx-auto mt-14 max-w-4xl px-6 sm:mt-20">
-          <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-0">
-            <div className="rounded-2xl border border-neutral-200 bg-white px-5 py-4 text-center shadow-sm sm:flex-1">
-              <p className="text-sm font-medium text-neutral-900">Contributors</p>
-              <p className="mt-0.5 text-xs text-neutral-400">Send MON toward the goal</p>
-            </div>
+        {/* A real preview of the actual product UI, not a diagram. */}
+        <div className="mx-auto mt-16 max-w-4xl px-6 sm:mt-24">
+          <HeroPotPreview />
+        </div>
+      </section>
 
-            <div className="flex items-center justify-center py-1 sm:w-12 sm:py-0">
-              <span className="text-neutral-300 sm:rotate-0" aria-hidden>
-                <span className="hidden sm:inline">─→</span>
-                <span className="sm:hidden">↓</span>
+      {/* Credibility strip — a short, dense band, deliberately not a full section */}
+      <section className="border-y border-neutral-200/70 bg-white py-8 sm:py-10">
+        <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-2.5 px-6 sm:gap-3">
+          <Reveal
+            delay={0}
+            className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700"
+          >
+            <span className="text-emerald-600">
+              <CheckIcon />
+            </span>
+            <CountUpNumber value={52} className="tabular-nums" /> Contract Tests Passing
+          </Reveal>
+          {CREDIBILITY_ITEMS.map((label, index) => (
+            <Reveal
+              key={label}
+              delay={(index + 1) * 0.06}
+              className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700"
+            >
+              <span className="text-emerald-600">
+                <CheckIcon />
               </span>
-            </div>
+              {label}
+            </Reveal>
+          ))}
+        </div>
+      </section>
 
-            <div className="rounded-2xl border-2 border-emerald-200 bg-emerald-50 px-5 py-4 text-center shadow-sm sm:flex-1">
-              <p className="text-sm font-semibold text-emerald-800">The Pot</p>
-              <p className="mt-0.5 text-xs text-emerald-700/70">Locked up until the goal&rsquo;s hit or time runs out</p>
-            </div>
+      {/* Problem — one statement, one comparison, deliberately not a card grid */}
+      <section className="relative mx-auto w-full max-w-2xl px-6 py-20 sm:py-28">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-24 top-1/2 -z-10 h-64 w-64 -translate-y-1/2 rounded-full bg-emerald-100/50 blur-3xl"
+        />
+        <div className="flex flex-col items-center gap-8 text-center">
+          <p className="max-w-lg text-2xl font-semibold leading-snug tracking-tight text-neutral-900 sm:text-3xl">
+            There&rsquo;s always one person who ends up eating the risk.
+          </p>
 
-            <div className="flex items-center justify-center py-1 sm:w-12 sm:py-0">
-              <span className="text-neutral-300" aria-hidden>
-                <span className="hidden sm:inline">─→</span>
-                <span className="sm:hidden">↓</span>
-              </span>
+          <div className="flex w-full max-w-sm flex-col items-center gap-3">
+            <div className="w-full rounded-xl border border-neutral-200 bg-white px-5 py-3 text-sm text-neutral-400 line-through decoration-neutral-300">
+              One person pays. Then spends two weeks chasing everyone else.
             </div>
-
-            <div className="rounded-2xl border border-neutral-200 bg-white px-5 py-4 text-center shadow-sm sm:flex-1">
-              <p className="text-sm font-medium text-neutral-900">Organizer or contributors</p>
-              <p className="mt-0.5 text-xs text-neutral-400">Released, or refunded automatically</p>
+            <span className="text-neutral-300" aria-hidden>
+              ↓
+            </span>
+            <div className="w-full rounded-xl border border-emerald-200 bg-emerald-50 px-5 py-3 text-sm font-medium text-emerald-800">
+              Everyone pays in. The pot decides when the money moves.
             </div>
           </div>
         </div>
@@ -163,50 +181,63 @@ export default function HomePage() {
 
         <div className="relative mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
           {STEPS.map((step, index) => (
-            <Card key={step.title} className="space-y-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-900 text-sm font-semibold text-white">
-                {index + 1}
-              </span>
-              <h3 className="font-semibold text-neutral-900">{step.title}</h3>
-              <p className="text-sm leading-relaxed text-neutral-500">{step.description}</p>
-            </Card>
+            <Reveal key={step.title} delay={index * 0.08}>
+              <Card className="h-full space-y-3">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-900 text-sm font-semibold text-white">
+                  {index + 1}
+                </span>
+                <h3 className="font-semibold text-neutral-900">{step.title}</h3>
+                <p className="text-sm leading-relaxed text-neutral-500">{step.description}</p>
+              </Card>
+            </Reveal>
           ))}
         </div>
       </section>
 
-      {/* Trust */}
-      <section className="border-y border-neutral-200 bg-white">
-        <div className="mx-auto max-w-4xl px-6 py-24 sm:py-32">
-          <div className="flex flex-col gap-3 sm:items-center sm:text-center">
-            <span className="text-sm font-medium text-emerald-700">Trust</span>
-            <h2 className="text-3xl font-semibold tracking-tight text-neutral-900 sm:text-4xl">
+      {/* Trust — the section doing the most work, so it gets the most room,
+          a dark background, and a direct path back into the product. */}
+      <section className="relative overflow-hidden bg-neutral-900 py-28 sm:py-36">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 flex justify-center"
+        >
+          <div className="h-[26rem] w-[26rem] rounded-full bg-emerald-500/10 blur-3xl" />
+        </div>
+
+        <div className="mx-auto max-w-3xl px-6">
+          <div className="flex flex-col items-center gap-4 text-center">
+            <span className="text-sm font-medium text-emerald-400">Trust</span>
+            <h2 className="max-w-xl text-4xl font-semibold tracking-tight text-white sm:text-5xl">
               No one can walk off with the money
             </h2>
-            <p className="max-w-xl text-neutral-500 sm:text-lg">
-              Nobody holds the money in between — not the organizer, not Potluck. The pot&rsquo;s
-              own rules decide what happens to it, and that can&rsquo;t change after the fact.
-            </p>
           </div>
 
-          <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
-            {TRUST_PILLARS.map((pillar) => (
-              <div key={pillar.title} className="space-y-2 rounded-2xl border border-neutral-100 p-5 sm:p-6">
-                <h3 className="font-semibold text-neutral-900">{pillar.title}</h3>
-                <p className="text-sm leading-relaxed text-neutral-500">{pillar.description}</p>
-              </div>
+          <div className="mt-16 divide-y divide-white/10 border-y border-white/10">
+            {TRUST_POINTS.map((point, index) => (
+              <Reveal key={point} delay={index * 0.1} className="flex items-start gap-4 py-6 sm:items-center sm:py-7">
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-400 sm:mt-0">
+                  <CheckIcon />
+                </span>
+                <p className="text-base text-neutral-200 sm:text-lg">{point}</p>
+              </Reveal>
             ))}
           </div>
 
-          <div className="mt-10 flex justify-center">
+          <div className="mt-12 flex flex-col items-center gap-3">
+            <Link
+              href="/create"
+              className="rounded-full bg-white px-7 py-3.5 text-center font-medium text-neutral-900 transition-colors hover:bg-neutral-200"
+            >
+              Start a pot
+            </Link>
             <a
-              href={`${monadTestnet.blockExplorers.default.url}/address/${POTLUCK_ADDRESS}`}
+              href={explorerUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-5 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
+              className="inline-flex items-center gap-2 text-sm text-neutral-400 underline decoration-neutral-600 underline-offset-2 transition-colors hover:text-neutral-200"
             >
-              See the code for yourself
-              <code className="text-neutral-400">{truncateAddress(POTLUCK_ADDRESS)}</code>
-              <span aria-hidden>↗</span>
+              or see the code for yourself
+              <code className="text-neutral-500">{truncateAddress(POTLUCK_ADDRESS)}</code>
             </a>
           </div>
         </div>
@@ -215,23 +246,18 @@ export default function HomePage() {
       {/* Use cases */}
       <section className="mx-auto w-full max-w-4xl px-6 py-24 sm:py-32">
         <div className="flex flex-col gap-3 sm:items-center sm:text-center">
-          <span className="text-sm font-medium text-emerald-700">Built for real groups</span>
+          <span className="text-sm font-medium text-emerald-700">Sound familiar?</span>
           <h2 className="text-3xl font-semibold tracking-tight text-neutral-900 sm:text-4xl">
-            Wherever a group needs to pool money
+            This is the group chat every time
           </h2>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
-          {USE_CASES.map((useCase) => (
-            <Card key={useCase.title} className="flex items-start gap-4">
-              <span className="text-2xl" aria-hidden>
-                {useCase.icon}
-              </span>
-              <div className="space-y-1">
-                <h3 className="font-semibold text-neutral-900">{useCase.title}</h3>
-                <p className="text-sm leading-relaxed text-neutral-500">{useCase.description}</p>
-              </div>
-            </Card>
+        <div className="mt-14 grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-6">
+          {USE_CASES.map((useCase, index) => (
+            <Reveal key={useCase.context} delay={index * 0.08} className="border-l-2 border-emerald-200 pl-5">
+              <p className="text-lg leading-snug text-neutral-800">{useCase.quote}</p>
+              <p className="mt-3 text-xs font-medium uppercase tracking-wide text-neutral-400">{useCase.context}</p>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -258,13 +284,13 @@ export default function HomePage() {
       <footer className="mx-auto w-full max-w-4xl px-6 py-10">
         <div className="flex flex-col items-start justify-between gap-4 text-sm text-neutral-400 sm:flex-row sm:items-center">
           <div className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-md bg-emerald-600 text-xs font-bold text-white">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-600 text-sm font-bold text-white">
               P
             </span>
             <span>Potluck — a simple way to split money with a group</span>
           </div>
           <a
-            href={`${monadTestnet.blockExplorers.default.url}/address/${POTLUCK_ADDRESS}`}
+            href={explorerUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="underline decoration-neutral-300 underline-offset-2 hover:text-neutral-600"
