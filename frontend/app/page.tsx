@@ -25,7 +25,19 @@ const STEPS = [
   },
 ];
 
-const CREDIBILITY_ITEMS = ["Contract Verified", "Live on Monad Testnet", "Open Source (MIT)", "No Admin Keys"];
+const GITHUB_URL = "https://github.com/Guna-Asher/Potluck";
+const EXPLORER_URL = `${monadTestnet.blockExplorers.default.url}/address/${POTLUCK_ADDRESS}`;
+
+// A real pot that was funded and released on testnet — not a mockup. Its
+// data is immutable on-chain history, so this link never goes stale.
+const EXAMPLE_LIVE_POT_ID = "4";
+
+const CREDIBILITY_ITEMS: { label: string; href?: string }[] = [
+  { label: "Contract Verified", href: EXPLORER_URL },
+  { label: "Live on Monad Testnet" },
+  { label: "Open Source (MIT)", href: GITHUB_URL },
+  { label: "No Admin Keys" },
+];
 
 const TRUST_POINTS = [
   "No one holds your money — it sits in the pot until it's paid out or refunded.",
@@ -67,8 +79,6 @@ function CheckIcon() {
 }
 
 export default function HomePage() {
-  const explorerUrl = `${monadTestnet.blockExplorers.default.url}/address/${POTLUCK_ADDRESS}`;
-
   return (
     <main className="flex flex-col">
       {/* Hero */}
@@ -113,8 +123,14 @@ export default function HomePage() {
         </div>
 
         {/* A real preview of the actual product UI, not a diagram. */}
-        <div className="mx-auto mt-16 max-w-4xl px-6 sm:mt-24">
+        <div className="mx-auto mt-16 flex max-w-4xl flex-col items-center gap-3 px-6 sm:mt-24">
           <HeroPotPreview />
+          <Link
+            href={`/pot/${EXAMPLE_LIVE_POT_ID}`}
+            className="text-sm text-neutral-400 underline decoration-neutral-300 underline-offset-2 transition-colors hover:text-neutral-700"
+          >
+            That one&rsquo;s a mockup — see a pot that actually ran →
+          </Link>
         </div>
       </section>
 
@@ -130,18 +146,35 @@ export default function HomePage() {
             </span>
             <CountUpNumber value={52} className="tabular-nums" /> Contract Tests Passing
           </Reveal>
-          {CREDIBILITY_ITEMS.map((label, index) => (
-            <Reveal
-              key={label}
-              delay={(index + 1) * 0.06}
-              className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700"
-            >
-              <span className="text-emerald-600">
-                <CheckIcon />
-              </span>
-              {label}
-            </Reveal>
-          ))}
+          {CREDIBILITY_ITEMS.map((item, index) => {
+            const badgeClassName =
+              "inline-flex items-center gap-1.5 rounded-full border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700";
+            const content = (
+              <>
+                <span className="text-emerald-600">
+                  <CheckIcon />
+                </span>
+                {item.label}
+              </>
+            );
+
+            return (
+              <Reveal key={item.label} delay={(index + 1) * 0.06}>
+                {item.href ? (
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`${badgeClassName} transition-colors hover:border-neutral-300 hover:bg-neutral-50`}
+                  >
+                    {content}
+                  </a>
+                ) : (
+                  <span className={badgeClassName}>{content}</span>
+                )}
+              </Reveal>
+            );
+          })}
         </div>
       </section>
 
@@ -231,10 +264,10 @@ export default function HomePage() {
               Start a pot
             </Link>
             <a
-              href={explorerUrl}
+              href={EXPLORER_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-neutral-400 underline decoration-neutral-600 underline-offset-2 transition-colors hover:text-neutral-200"
+              className="inline-flex items-center gap-2 text-sm text-neutral-300 underline decoration-neutral-600 underline-offset-2 transition-colors hover:text-white"
             >
               or see the code for yourself
               <code className="text-neutral-500">{truncateAddress(POTLUCK_ADDRESS)}</code>
@@ -290,7 +323,7 @@ export default function HomePage() {
             <span>Potluck — a simple way to split money with a group</span>
           </div>
           <a
-            href={explorerUrl}
+            href={EXPLORER_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="underline decoration-neutral-300 underline-offset-2 hover:text-neutral-600"
