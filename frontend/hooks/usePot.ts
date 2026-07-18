@@ -20,7 +20,7 @@ const POLL_INTERVAL_MS = 4_000;
 /** Single source of truth for a pot's live state. Every component that needs
  * pot data reads it through this hook so there is exactly one polling loop. */
 export function usePot(potId: bigint | undefined) {
-  const { data, isLoading, isError, refetch } = useReadContract({
+  const { data, isLoading, isError, refetch, dataUpdatedAt } = useReadContract({
     address: POTLUCK_ADDRESS,
     abi: POTLUCK_ABI,
     functionName: "getPot",
@@ -49,5 +49,8 @@ export function usePot(potId: bigint | undefined) {
     };
   }, [data]);
 
-  return { pot, isLoading, isError, refetch };
+  // dataUpdatedAt is react-query's ms timestamp of the last successful read —
+  // 0 until the first one lands. Surfaced so the pot page can show that its
+  // numbers are live-polled rather than a static snapshot.
+  return { pot, isLoading, isError, refetch, dataUpdatedAt };
 }

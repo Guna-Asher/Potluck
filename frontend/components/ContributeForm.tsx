@@ -64,7 +64,7 @@ export function ContributeForm({ potId, remainingAmount, onSuccess }: Contribute
           Chip in
         </label>
         {remainingAmount !== undefined && remainingAmount > 0n && (
-          <span className="text-xs text-neutral-400">{formatMon(remainingAmount)} still needed</span>
+          <span className="text-xs tabular-nums text-neutral-400">{formatMon(remainingAmount)} still needed</span>
         )}
       </div>
       <div className="flex flex-col gap-3 sm:flex-row">

@@ -20,10 +20,10 @@ export function PotProgress({ pot }: PotProgressProps) {
     <Card className="space-y-5">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-4xl font-semibold tracking-tight text-neutral-900">
+          <p className="text-4xl font-semibold tabular-nums tracking-tight text-neutral-900">
             {formatMon(pot.totalContributed)}
           </p>
-          <p className="mt-1 text-sm text-neutral-500">raised of {formatMon(pot.targetAmount)} goal</p>
+          <p className="mt-1 text-sm tabular-nums text-neutral-500">raised of {formatMon(pot.targetAmount)} goal</p>
         </div>
         <PotStatusBadge pot={pot} />
       </div>
@@ -44,7 +44,7 @@ export function PotProgress({ pot }: PotProgressProps) {
           />
         </div>
 
-        <div className="flex items-center justify-between text-sm">
+        <div className="flex items-center justify-between text-sm tabular-nums">
           <span className="font-medium text-neutral-700">{percentage.toFixed(0)}% funded</span>
           <span className="text-neutral-500">
             {goalMet ? "Goal reached" : `${formatMon(remaining)} to go`}
@@ -52,7 +52,7 @@ export function PotProgress({ pot }: PotProgressProps) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between border-t border-neutral-100 pt-4 text-sm text-neutral-500">
+      <div className="flex items-center justify-between border-t border-neutral-100 pt-4 text-sm tabular-nums text-neutral-500">
         <span>
           {pot.contributorCount.toString()} {pot.contributorCount === 1n ? "person" : "people"} chipped in
         </span>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePot } from "@/hooks/usePot";
-import { calculateProgress, formatMon } from "@/lib/format";
+import { calculateProgress, formatCountdown, formatMon } from "@/lib/format";
 import type { PotRole } from "@/lib/potHistory";
 import { Card } from "./ui/Card";
 import { PotStatusBadge } from "./PotStatusBadge";
@@ -34,7 +34,7 @@ export function PotCard({ potId, role, fallbackTitle }: PotCardProps) {
                 style={{ width: `${percentage}%` }}
               />
             </div>
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-between text-sm tabular-nums">
               <span className="font-medium text-neutral-700">{formatMon(pot.totalContributed)}</span>
               <span className="text-neutral-400">of {formatMon(pot.targetAmount)}</span>
             </div>
@@ -43,9 +43,14 @@ export function PotCard({ potId, role, fallbackTitle }: PotCardProps) {
           <p className="text-sm text-neutral-400">{isLoading ? "Loading…" : "Unavailable right now"}</p>
         )}
 
-        <span className="inline-flex items-center border-t border-neutral-100 pt-3 text-xs font-medium text-neutral-400">
-          {role === "organizer" ? "You organized this" : "You contributed"}
-        </span>
+        <div className="flex items-center justify-between border-t border-neutral-100 pt-3 text-xs font-medium text-neutral-400">
+          <span>{role === "organizer" ? "You organized this" : "You contributed"}</span>
+          {pot && (
+            <span className="tabular-nums">
+              {pot.released ? "Released" : formatCountdown(pot.deadline)}
+            </span>
+          )}
+        </div>
       </Card>
     </Link>
   );

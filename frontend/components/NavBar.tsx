@@ -1,7 +1,13 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { WalletConnectButton } from "./WalletConnectButton";
 
 export function NavBar() {
+  const pathname = usePathname();
+  const isMyPotsActive = pathname.startsWith("/pots");
+
   return (
     <header className="mx-auto flex w-full max-w-4xl items-center justify-between px-6 py-5">
       <Link href="/" className="flex items-center gap-2 text-lg font-semibold text-neutral-900">
@@ -14,10 +20,22 @@ export function NavBar() {
       <nav className="flex items-center gap-2 sm:gap-4">
         <Link
           href="/pots"
-          className="rounded-full px-3 py-1.5 text-sm font-medium text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
+          aria-current={isMyPotsActive ? "page" : undefined}
+          className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+            isMyPotsActive
+              ? "bg-neutral-100 text-neutral-900"
+              : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
+          }`}
         >
           My Pots
         </Link>
+        <span
+          title="This app runs on Monad Mainnet (chain 143)"
+          className="hidden items-center gap-1.5 rounded-full border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-500 sm:inline-flex"
+        >
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />
+          Monad
+        </span>
         <a
           href="https://github.com/Guna-Asher/Potluck"
           target="_blank"

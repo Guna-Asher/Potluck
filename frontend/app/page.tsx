@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/Card";
 import { Reveal } from "@/components/landing/Reveal";
 import { CountUpNumber } from "@/components/landing/CountUpNumber";
 import { HeroPotPreview } from "@/components/landing/HeroPotPreview";
-import { POTLUCK_ADDRESS } from "@/lib/contract";
+import { EXAMPLE_POT_ID, POTLUCK_ADDRESS } from "@/lib/contract";
 import { monadMainnet } from "@/lib/chain";
 
 const STEPS = [
@@ -27,13 +27,6 @@ const STEPS = [
 
 const GITHUB_URL = "https://github.com/Guna-Asher/Potluck";
 const EXPLORER_URL = `${monadMainnet.blockExplorers.default.url}/address/${POTLUCK_ADDRESS}`;
-
-// A real pot that was funded and released on mainnet — not a mockup. Its
-// data is immutable on-chain history, so this link never goes stale.
-// MAINNET_DEPLOY: the deployment checklist creates and releases this demo pot
-// as the first pot on the fresh contract (potId 1). If it ends up with a
-// different id, update this constant to match.
-const EXAMPLE_LIVE_POT_ID = "1";
 
 const CREDIBILITY_ITEMS: { label: string; href?: string }[] = [
   { label: "Contract Verified", href: EXPLORER_URL },
@@ -94,6 +87,19 @@ export default function HomePage() {
         </div>
 
         <div className="mx-auto flex max-w-4xl flex-col items-start gap-6 px-6 pt-16 sm:items-center sm:pt-24 sm:text-center lg:pt-32">
+          <a
+            href={EXPLORER_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1.5 text-sm font-medium text-emerald-800 transition-colors hover:border-emerald-300 hover:bg-emerald-100/70"
+          >
+            <span className="relative flex h-2 w-2" aria-hidden>
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            </span>
+            Live on Monad Mainnet
+          </a>
+
           <h1 className="max-w-3xl text-5xl font-semibold leading-[1.05] tracking-tight text-neutral-900 sm:text-6xl lg:text-7xl">
             Stop being the friend group&rsquo;s bank.
           </h1>
@@ -129,10 +135,10 @@ export default function HomePage() {
         <div className="mx-auto mt-16 flex max-w-4xl flex-col items-center gap-3 px-6 sm:mt-24">
           <HeroPotPreview />
           <Link
-            href={`/pot/${EXAMPLE_LIVE_POT_ID}`}
+            href={`/pot/${EXAMPLE_POT_ID}`}
             className="text-sm text-neutral-400 underline decoration-neutral-300 underline-offset-2 transition-colors hover:text-neutral-700"
           >
-            That one&rsquo;s a mockup — see a pot that actually ran →
+            Illustrative example — see a real pot that ran on mainnet →
           </Link>
         </div>
       </section>
@@ -334,6 +340,9 @@ export default function HomePage() {
             Contract on Monadscan
           </a>
         </div>
+        <p className="mt-4 border-t border-neutral-200/70 pt-4 text-xs text-neutral-400">
+          Monad Mainnet · Chain ID 143 · Open source under MIT · No admin keys
+        </p>
       </footer>
     </main>
   );
