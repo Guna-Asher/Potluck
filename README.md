@@ -6,19 +6,19 @@
 
 Potluck is a shared pot for group money: trip deposits, gifts, bulk orders, anything that needs
 everyone to chip in. Contributors send MON toward a goal and a deadline. Hit the goal in time and
-the organizer gets paid out. Miss it, and every contributor gets their money back. No one has to
-ask, and no one has to hold the money in between.
+the organizer gets paid out. Miss it, and every contributor gets their money back. Nobody has to
+collect the money or hold it in between.
 
-<!-- SCREENSHOT: Landing page (hero) -->
-
-[![Live App](https://img.shields.io/badge/Live-potlock--phi.vercel.app-10b981?style=flat-square)](https://potlock-phi.vercel.app/)
+[![Live App](https://img.shields.io/badge/Live-potluck--app--woad.vercel.app-10b981?style=flat-square)](https://potluck-app-woad.vercel.app/)
 [![Tests](https://img.shields.io/badge/tests-52%20passing-brightgreen?style=flat-square)](#testing)
 [![Contract Verified](https://img.shields.io/badge/Contract-Verified-brightgreen?style=flat-square)](https://monadscan.com/address/0x38777e7308398B4D91E1359fF2ac08148AE9A6b0)
 [![Monad Mainnet](https://img.shields.io/badge/Monad-Mainnet-836EF9?style=flat-square)](https://monadscan.com/address/0x38777e7308398B4D91E1359fF2ac08148AE9A6b0)
 [![Solidity](https://img.shields.io/badge/Solidity-%5E0.8.24-363636?style=flat-square&logo=solidity)](./src/Potluck.sol)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](./LICENSE)
 
-**[Open the app](https://potlock-phi.vercel.app/)** · **[Contract on Monadscan](https://monadscan.com/address/0x38777e7308398B4D91E1359fF2ac08148AE9A6b0)** · **[Report an issue](https://github.com/Guna-Asher/Potluck/issues)**
+**[Open the app](https://potluck-app-woad.vercel.app/)** · **[Contract on Monadscan](https://monadscan.com/address/0x38777e7308398B4D91E1359fF2ac08148AE9A6b0)** · **[Report an issue](https://github.com/Guna-Asher/Potluck/issues)**
+
+![Potluck landing page: the headline "Stop being the friend group's bank" above Start a pot and See how it works buttons, with a Live on Monad Mainnet badge](assets/Landing_Page.png)
 
 </div>
 
@@ -49,17 +49,17 @@ ask, and no one has to hold the money in between.
 
 ## Try It in 60 Seconds
 
-No clone, no setup. The app is live on Monad Mainnet, so amounts are real money; small amounts
-are plenty.
+You can open the app immediately, no clone or setup required. It runs on Monad Mainnet, so use
+small amounts when trying it.
 
-1. **Open the app:** [potlock-phi.vercel.app](https://potlock-phi.vercel.app/)
-2. **See a finished pot:** [pot #4, "Weekend Practice"](https://potlock-phi.vercel.app/pot/4) was
+1. **Open the app:** [potluck-app-woad.vercel.app](https://potluck-app-woad.vercel.app/)
+2. **See a finished pot:** [pot #4, "Weekend Practice"](https://potluck-app-woad.vercel.app/pot/4) was
    funded by two contributors and released to its organizer, all on mainnet.
 3. **Create your own pot:** set a title, a MON goal, and a deadline (quick-picks: 3 days, 1 week,
    2 weeks).
 4. **Share the link.** Anyone can open it and watch live progress without an account.
 5. **Contribute from another wallet** and watch the pot update in a few seconds.
-6. **Release or refund.** Hit the goal in time and the organizer releases the funds; otherwise
+6. **Release or refund.** If the goal is met in time, the organizer releases the funds. If not,
    every contributor claims back exactly what they put in.
 
 You'll need MetaMask. The app prompts the network switch to Monad Mainnet automatically.
@@ -77,10 +77,10 @@ chasing everyone else for their share.
 - **The organizer carries all the risk.** If the plan dies after a non-refundable deposit,
   they eat the loss alone.
 
-Potluck replaces that honor system with escrow. The money sits in a contract, not in a person's
-account, until the goal is hit or the deadline passes. Nobody has to front costs, nobody has to
-nag, and "what if it falls through?" has a built-in answer: everyone gets their exact
-contribution back. The rules can't be bent by the organizer, or by whoever built this.
+Potluck replaces that honor system with escrow. Until the goal is hit or the deadline passes,
+the money sits in a contract instead of someone's personal account. Nobody fronts the cost or
+chases payments, and if the plan falls through, everyone gets their exact contribution back.
+The rules can't be bent by the organizer, or by whoever built this.
 
 > [!NOTE]
 > Monad is what makes this practical for a $10 chip-in instead of just large transactions.
@@ -133,7 +133,7 @@ The success path has already run end-to-end with real money:
 
 | | |
 |---|---|
-| Pot | [#4 "Weekend Practice"](https://potlock-phi.vercel.app/pot/4) |
+| Pot | [#4 "Weekend Practice"](https://potluck-app-woad.vercel.app/pot/4) |
 | Goal | 2 MON, fully funded |
 | Contributors | 2 |
 | Outcome | Released to the organizer before the deadline |
@@ -142,7 +142,7 @@ The success path has already run end-to-end with real money:
 This is the same pot the landing page links to. Its data is immutable on-chain history, so the
 link never goes stale.
 
-<!-- SCREENSHOT: Successful pot page (pot #4) -->
+![Pot page for "Weekend Practice": 2 MON raised of a 2 MON goal, 100% funded and released to the organizer, with a paid-out confirmation and an escrow note linking to Monadscan](assets/Successful_Pot.png)
 
 ## Architecture
 
@@ -153,7 +153,7 @@ flowchart LR
     RPC --> C[["Potluck.sol<br/>(single, immutable contract)"]]
 ```
 
-- **No backend, no indexer, no database.** Every read hits the contract directly through wagmi's
+- **There is no backend, indexer, or database.** Every read hits the contract directly through wagmi's
   `useReadContract`, polled every 4 seconds while a pot page is open.
 - **No custom API routes.** The frontend is a Next.js App Router app that talks to the chain
   client-side.
@@ -180,28 +180,27 @@ flowchart LR
 - Deadline quick-picks (3 days / 1 week / 2 weeks) alongside a full date-time picker
 - Organizer recognition: the pot header knows when *you* are the organizer
 - Local "My Pots" dashboard (`/pots`), chain-scoped so testnet history can't leak in
-- Loading skeletons shaped like the real layout, not spinner-and-pray
+- Loading skeletons shaped like the actual page layout
 
-**Care in the details**
+**Polish**
 
 - Plain-language error messages mapped from every contract revert reason
-- Cancelling in your wallet is treated as a choice, not an error (neutral toast, no red)
+- Cancelling a transaction in your wallet shows a neutral toast rather than a red error
 - Network guard that detects the wrong chain and offers a one-click switch
 - Keyboard-accessible: visible focus states on every button and link
 - Responsive from phone to desktop, including a two-column pot page with a sticky action rail
 - Copy-to-clipboard pot links with a fallback for restrictive browser contexts
 
-<!-- SCREENSHOT: Create pot form -->
-<!-- SCREENSHOT: Mobile experience -->
+![Create-pot form with a title field, optional details, a MON goal, and a deadline picker with 3-day, 1-week, and 2-week quick-picks](assets/Create_Pot_Screen.png)
 
 ## Smart Contract
 
-[`src/Potluck.sol`](./src/Potluck.sol): one self-contained escrow contract, under 200 lines, zero
-external imports. No proxies, no admin keys, no upgrade path.
+[`src/Potluck.sol`](./src/Potluck.sol) is a single self-contained escrow contract, under 200
+lines, with zero external imports. There are no proxies, admin keys, or upgrade paths.
 
 | Function | Access | Description |
 |---|---|---|
-| `createPot(title, description, targetAmount, deadline)` | anyone | Registers a new pot; caller becomes the organizer |
+| `createPot(title, description, targetAmount, deadline)` | anyone | Registers a new pot and makes the caller its organizer |
 | `contribute(potId)` *(payable)* | anyone | Adds `msg.value` to the pot, before the deadline |
 | `release(potId)` | organizer only | Pays the full balance to the organizer once the goal is met, before the deadline |
 | `claimRefund(potId)` | any contributor | Returns the caller's own contribution once the pot has expired unreleased |
@@ -225,33 +224,32 @@ return value.
 
 ## Security
 
-**Audit status:** not externally audited. The contract is intentionally small, dependency-free,
-and designed to be reviewed in one sitting.
+**Audit status:** not externally audited. The contract is deliberately small and dependency-free
+so it can be reviewed in one sitting.
 
 | Property | How it's enforced |
 |---|---|
 | No reentrancy | Checks-effects-interactions: `release()` and `claimRefund()` update state before the external call. Verified by an attacker-contract suite (`PotluckReentrancy.t.sol`). |
-| No rug pull | No admin key, no upgrade path, no pausability. Once deployed, behavior cannot change, including by whoever wrote it. |
+| No rug pull | There is no admin key, upgrade path, or pausability. Once deployed, behavior cannot change, even for whoever wrote it. |
 | No stranded funds | `claimRefund` works for every contributor after the deadline whether or not the goal was met, so an absent organizer can't lock anyone's money. |
-| No refund expiry | There is no claim window, no admin sweep, no forfeiture path. An unclaimed contribution stays in escrow, claimable only by its contributor, indefinitely. |
+| No refund expiry | There is no claim window, admin sweep, or forfeiture path. An unclaimed contribution stays in escrow indefinitely, claimable only by its contributor. |
 | Pull over push | Refunds are claimed per-contributor, so one reverting recipient can't block anyone else. |
 
-The floor this design rests on: the worst case for a contributor is always "get exactly your
-money back, whenever you get around to it." See the [FAQ](#faq) for the refund guarantees in
-plain language.
+The worst case for a contributor is always the same: you get exactly your money back, whenever
+you get around to claiming it. See the [FAQ](#faq) for the refund guarantees in plain language.
 
 ## Design System
 
 The frontend follows a small written design system: [`frontend/DESIGN.md`](./frontend/DESIGN.md).
 The short version:
 
-- **Color roles, not decoration.** Four hue families total. Emerald means "money moving the
-  right way" and is never decorative; neutral ink does everything else.
+- **Color carries meaning.** Four hue families total. Emerald means "money moving the right
+  way" and is never decorative. Neutral ink does everything else.
 - **Shape grammar.** Pills are interactive, rounded rectangles are containers. Two radii, two
   elevation levels, all tokenized.
-- **Still by default.** Money UI doesn't shimmer while someone decides whether to send. Motion
-  is reserved for meaningful moments and respects `prefers-reduced-motion`.
-- **Accessible on purpose.** Global keyboard focus treatment, `aria` on status surfaces, icons
+- **Still by default.** Money UI shouldn't shimmer while someone decides whether to send.
+  Motion is limited to a few key moments and respects `prefers-reduced-motion`.
+- **Accessibility.** Global keyboard focus treatment, `aria` on status surfaces, and icons that
   never carry meaning without adjacent text.
 
 ## Tech Stack
@@ -282,7 +280,7 @@ npm run dev
 
 The app runs against the already-deployed, verified contract on Monad Mainnet. You don't need to
 deploy anything to run the frontend locally. You'll need MetaMask connected to Monad Mainnet with
-some MON to contribute or create pots. **This is real money**; small amounts are plenty.
+some MON to contribute or create pots. **This is real money**, so keep amounts small.
 
 <details>
 <summary><strong>Environment variables</strong></summary>
@@ -293,9 +291,9 @@ some MON to contribute or create pots. **This is real money**; small amounts are
 
 | Variable | Description |
 |---|---|
-| `NEXT_PUBLIC_MONAD_RPC_URL` | RPC endpoint the frontend reads/writes through (default: `https://rpc.monad.xyz`; the public endpoint is rate-limited, so production should use a dedicated provider URL) |
+| `NEXT_PUBLIC_MONAD_RPC_URL` | RPC endpoint the frontend reads/writes through. Defaults to `https://rpc.monad.xyz`, which is rate-limited, so production should use a dedicated provider URL |
 
-**Contract deployment** (`.env` at the project root, see `.env.example`; only needed to deploy your own instance)
+**Contract deployment** (`.env` at the project root, see `.env.example`). You only need these to deploy your own instance.
 
 | Variable | Description |
 |---|---|
@@ -338,7 +336,7 @@ forge coverage          # coverage report
 
 | | |
 |---|---|
-| Live app | [potlock-phi.vercel.app](https://potlock-phi.vercel.app/) |
+| Live app | [potluck-app-woad.vercel.app](https://potluck-app-woad.vercel.app/) |
 | Network | Monad Mainnet (chain ID `143`) |
 | Contract | [`0x38777e7308398B4D91E1359fF2ac08148AE9A6b0`](https://monadscan.com/address/0x38777e7308398B4D91E1359fF2ac08148AE9A6b0) |
 | Verification | Source verified on Monadscan (exact match) |
@@ -425,8 +423,8 @@ potluck/
 **Do refunds expire?**
 No. Once a pot's deadline passes without `release()` being called, `claimRefund()` has no time
 limit. The contract checks *that* the deadline has passed, never how long ago. There is no
-refund window, no admin sweep, and no forfeiture mechanism; nobody else can ever take an
-unclaimed contribution.
+refund window, admin sweep, or forfeiture mechanism, and nobody else can ever take an unclaimed
+contribution.
 
 **What if the organizer disappears?**
 Nothing is lost. Refunds don't involve the organizer at all. After the deadline, `claimRefund`
@@ -435,7 +433,7 @@ not the organizer is ever heard from again.
 
 **What if I forget to claim my refund for months or years?**
 It waits. Your contribution is recorded in contract storage that only you can zero out, by
-claiming it. A claim made a year later pays exactly what you put in; the only cost of waiting
+claiming it. A claim made a year later pays exactly what you put in. The only cost of waiting
 is the gas on the eventual claim transaction.
 
 ## Known Limitations & What's Next
@@ -443,8 +441,8 @@ is the gas on the eventual claim transaction.
 | Today | Because | Natural next step |
 |---|---|---|
 | MetaMask-only wallet support | A single injected connector kept the first release small | WalletConnect / Coinbase Wallet as additional connectors |
-| `/pots` is local, per-browser history | No indexer; `localStorage` only, resets if you clear browser data | An indexer or subgraph for a full, cross-device, per-wallet pot history |
-| No frontend automated test suite | Contract logic is heavily tested; UI is verified manually plus TypeScript/ESLint | Component and integration tests for the write flows |
+| `/pots` is local, per-browser history | There is no indexer, so history lives in `localStorage` and resets with browser data | An indexer or subgraph for a full, cross-device, per-wallet pot history |
+| No frontend automated test suite | Contract logic is heavily tested, while the UI relies on manual checks, TypeScript, and ESLint | Component and integration tests for the write flows |
 | The pot-wide badge reads "Refund Available" even after every contributor has claimed (each wallet does see its own accurate claim state) | The contract has no aggregate refund counter, and public RPCs limit `eth_getLogs` ranges, so deriving one client-side isn't a single call | A `totalRefunded` counter in a future contract version, or indexed events. Deferred deliberately: not worth redeploying a verified contract or adding a backend for one badge label |
 
 None of this affects the contract's core guarantee. The escrow logic is fully tested and
