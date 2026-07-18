@@ -4,8 +4,8 @@ import { getPotStatus, type PotStatus } from "@/lib/potStatus";
 const STATUS_CONFIG: Record<PotStatus, { label: string; badgeClassName: string; dotClassName: string }> = {
   active: {
     label: "Funding Open",
-    badgeClassName: "bg-blue-50 text-blue-700",
-    dotClassName: "bg-blue-500",
+    badgeClassName: "bg-neutral-100 text-neutral-700",
+    dotClassName: "bg-emerald-500",
   },
   goalReached: {
     label: "Goal Reached",

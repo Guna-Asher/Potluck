@@ -9,7 +9,7 @@ import { PageTransition } from "@/components/PageTransition";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
-const TITLE = "Potluck — Group money pools that pay for themselves";
+const TITLE = "Potluck — The shared pot for group money";
 const DESCRIPTION = "Collect money from a group without becoming the group's debt collector.";
 
 // Vercel sets VERCEL_URL automatically on every deployment (preview and

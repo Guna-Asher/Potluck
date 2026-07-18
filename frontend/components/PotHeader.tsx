@@ -30,7 +30,7 @@ export function PotHeader({ title, description, organizer, isViewerOrganizer = f
           rel="noopener noreferrer"
           className="text-neutral-400 underline decoration-neutral-300 underline-offset-2 hover:text-neutral-700"
         >
-          view
+          View
         </a>
       </div>
     </div>

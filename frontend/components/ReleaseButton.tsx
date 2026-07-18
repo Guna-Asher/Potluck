@@ -67,7 +67,7 @@ export function ReleaseButton({ potId }: ReleaseButtonProps) {
         disabled={isSubmitting}
         className="w-full rounded-full bg-emerald-600 px-5 py-3 font-medium text-white transition-colors hover:bg-emerald-700 disabled:opacity-50"
       >
-        {isSubmitting ? "Releasing…" : "Release funds to yourself"}
+        {isSubmitting ? "Releasing…" : "Release the funds"}
       </button>
       <TransactionStatus
         hash={hash}

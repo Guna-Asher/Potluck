@@ -75,7 +75,7 @@ export function ClaimRefundButton({ potId }: ClaimRefundButtonProps) {
       <Card className="space-y-1">
         <h3 className="font-semibold text-neutral-900">Refund claimed</h3>
         <p className="text-sm leading-relaxed text-neutral-500">
-          You already claimed your refund for this pot — there&rsquo;s nothing left to do here.
+          You already claimed your refund for this pot. There&rsquo;s nothing left to do here.
         </p>
       </Card>
     );

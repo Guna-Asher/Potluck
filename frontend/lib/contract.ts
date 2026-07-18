@@ -8,10 +8,10 @@ import { getAddress } from "viem";
 // 0xA4C72147682a2E56A5e4344befcB5eddec2fa3a1 and is unaffected.)
 export const POTLUCK_ADDRESS = getAddress("0x38777e7308398B4D91E1359fF2ac08148AE9A6b0");
 
-// A real pot that was funded and released on mainnet — linked from the
-// landing hero and the /pots empty state as a live, verifiable example.
-// If the demo pot was created with a different id, update this to match.
-export const EXAMPLE_POT_ID = "1";
+// A real pot that was funded and released on mainnet ("Weekend Practice",
+// 2/2 MON, 2 contributors, released) — linked from the landing hero and the
+// /pots empty state as a live, verifiable example of the success path.
+export const EXAMPLE_POT_ID = "4";
 
 export const POTLUCK_ABI = [
   {

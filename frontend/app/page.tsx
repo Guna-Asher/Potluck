@@ -21,7 +21,7 @@ const STEPS = [
   },
   {
     title: "Release or refund",
-    description: "Goal met in time → the organizer releases the funds. Goal missed → everyone gets refunded.",
+    description: "Hit the goal in time and the organizer releases the funds. Miss it and everyone gets their money back.",
   },
 ];
 
@@ -32,12 +32,12 @@ const CREDIBILITY_ITEMS: { label: string; href?: string }[] = [
   { label: "Contract Verified", href: EXPLORER_URL },
   { label: "Live on Monad Mainnet" },
   { label: "Open Source (MIT)", href: GITHUB_URL },
-  { label: "No Admin Keys" },
+  { label: "No Admin Keys", href: `${GITHUB_URL}/blob/main/src/Potluck.sol` },
 ];
 
 const TRUST_POINTS = [
-  "No one holds your money — it sits in the pot until it's paid out or refunded.",
-  "Nobody can change the rules once a pot is live — not the organizer, not us.",
+  "No one holds your money. It sits in the pot until it's paid out or refunded.",
+  "Nobody can change the rules once a pot is live. Not the organizer, not us.",
   "Every pot, every payment, every payout is public. Check it yourself, any time.",
 ];
 
@@ -106,7 +106,7 @@ export default function HomePage() {
 
           <p className="max-w-xl text-lg text-neutral-500 sm:text-xl">
             Create a shared pot, set a goal and a deadline. Hit the goal in time and the organizer
-            releases the funds. Miss it, and every contributor is refunded automatically — no one
+            releases the funds. Miss it, and every contributor is refunded automatically. No one
             has to ask.
           </p>
 
@@ -125,9 +125,12 @@ export default function HomePage() {
             </a>
           </div>
 
-          <p className="text-sm text-neutral-400">
-            No sign-up to peek at a pot &nbsp;·&nbsp; No one can walk off with the money &nbsp;·&nbsp;
-            Every payment is out in the open
+          <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-neutral-400 sm:justify-center">
+            <span>No sign-up to peek at a pot</span>
+            <span aria-hidden>·</span>
+            <span>No one can walk off with the money</span>
+            <span aria-hidden>·</span>
+            <span>Every payment is out in the open</span>
           </p>
         </div>
 
@@ -188,11 +191,7 @@ export default function HomePage() {
       </section>
 
       {/* Problem — one statement, one comparison, deliberately not a card grid */}
-      <section className="relative mx-auto w-full max-w-2xl px-6 py-20 sm:py-28">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -left-24 top-1/2 -z-10 h-64 w-64 -translate-y-1/2 rounded-full bg-emerald-100/50 blur-3xl"
-        />
+      <section className="mx-auto w-full max-w-2xl px-6 py-20 sm:py-28">
         <div className="flex flex-col items-center gap-8 text-center">
           <p className="max-w-lg text-2xl font-semibold leading-snug tracking-tight text-neutral-900 sm:text-3xl">
             There&rsquo;s always one person who ends up eating the risk.
@@ -308,10 +307,10 @@ export default function HomePage() {
       <section className="bg-neutral-900">
         <div className="mx-auto flex max-w-4xl flex-col items-start gap-6 px-6 py-20 sm:items-center sm:py-28 sm:text-center">
           <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-            Stop fronting the money. Start a pot.
+            Stop fronting the money.
           </h2>
           <p className="max-w-md text-neutral-400">
-            Free to try right now. No sign-up, no middleman, no chasing anyone down.
+            Takes a minute to set up. No sign-up, no middleman, no chasing anyone down.
           </p>
           <Link
             href="/create"
@@ -329,7 +328,7 @@ export default function HomePage() {
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-600 text-sm font-bold text-white">
               P
             </span>
-            <span>Potluck — a simple way to split money with a group</span>
+            <span>Potluck — the shared pot for group money</span>
           </div>
           <a
             href={EXPLORER_URL}

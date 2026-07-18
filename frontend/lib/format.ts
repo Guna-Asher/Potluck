@@ -48,14 +48,21 @@ const ERROR_MESSAGES: Record<string, string> = {
   DeadlineInPast: "Pick a deadline that's in the future.",
   ZeroTarget: "The goal needs to be more than zero.",
   AlreadyReleased: "This pot has already been paid out.",
-  DeadlinePassed: "This pot is closed — the deadline has passed.",
+  DeadlinePassed: "This pot is closed. The deadline has passed.",
   DeadlineNotReached: "Refunds open up once the deadline passes.",
   ZeroValue: "Enter an amount greater than zero.",
   NotOrganizer: "Only the person who created this pot can release it.",
   TargetNotMet: "This pot hasn't reached its goal yet.",
-  NoContribution: "It looks like you haven't put anything into this pot.",
+  NoContribution: "You haven't contributed to this pot.",
   TransferFailed: "That didn't go through. Try again in a bit.",
 };
+
+/** True when the "error" is just the user declining in their wallet — a
+ * deliberate choice, not a failure, so callers can present it neutrally
+ * instead of as a red error state. */
+export function isUserRejection(error: unknown): boolean {
+  return error instanceof BaseError && error.shortMessage.toLowerCase().includes("user rejected");
+}
 
 export function getFriendlyErrorMessage(error: unknown): string {
   if (error instanceof BaseError) {
@@ -67,8 +74,8 @@ export function getFriendlyErrorMessage(error: unknown): string {
       }
     }
 
-    if (error.shortMessage.toLowerCase().includes("user rejected")) {
-      return "Cancelled.";
+    if (isUserRejection(error)) {
+      return "No worries. Nothing was sent.";
     }
 
     if (error.name === "ProviderNotFoundError") {

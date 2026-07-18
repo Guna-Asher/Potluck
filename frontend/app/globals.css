@@ -14,3 +14,12 @@
 body {
   background-color: #fafaf9;
 }
+
+/* One keyboard-focus treatment for every button and link. Inputs keep their
+   own focus ring (border + ring in the input classes), so they're excluded
+   here to avoid doubling up. */
+:where(button, a):focus-visible {
+  outline: 2px solid rgb(16 185 129); /* emerald-500 */
+  outline-offset: 2px;
+  border-radius: inherit;
+}

@@ -22,7 +22,7 @@ export function CopyLinkButton({ potId }: CopyLinkButtonProps) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      showToast("Couldn't copy automatically — copy the link from your address bar instead.", "error");
+      showToast("Couldn't copy automatically. Copy the link from your address bar instead.", "error");
     }
   };
 

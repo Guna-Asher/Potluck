@@ -12,7 +12,6 @@ interface PotProgressProps {
 
 export function PotProgress({ pot }: PotProgressProps) {
   const percentage = calculateProgress(pot.totalContributed, pot.targetAmount);
-  const nearGoal = percentage >= 75 && percentage < 100;
   const goalMet = percentage >= 100;
   const remaining = pot.targetAmount > pot.totalContributed ? pot.targetAmount - pot.totalContributed : 0n;
 
@@ -31,13 +30,7 @@ export function PotProgress({ pot }: PotProgressProps) {
       <div className="space-y-2">
         <div className="h-3 w-full overflow-hidden rounded-full bg-neutral-100 shadow-[inset_0_1px_2px_rgb(0_0_0/0.06)]">
           <motion.div
-            className={`h-full rounded-full ${
-              goalMet
-                ? "bg-gradient-to-r from-emerald-400 to-emerald-500"
-                : nearGoal
-                  ? "bg-gradient-to-r from-emerald-300 to-emerald-400"
-                  : "bg-gradient-to-r from-blue-300 to-blue-400"
-            }`}
+            className="h-full rounded-full bg-emerald-500"
             initial={{ width: 0 }}
             animate={{ width: `${percentage}%` }}
             transition={{ duration: 0.8, ease: "easeOut" }}

@@ -20,7 +20,7 @@ export function ContributeForm({ potId, remainingAmount, onSuccess }: Contribute
   const { showToast } = useToast();
   const [amount, setAmount] = useState("");
 
-  useTransactionToast(isConfirmed, error, "You're in — thanks for chipping in.");
+  useTransactionToast(isConfirmed, error, "You're in. Thanks for chipping in.");
 
   useEffect(() => {
     if (isConfirmed) {
@@ -94,7 +94,7 @@ export function ContributeForm({ potId, remainingAmount, onSuccess }: Contribute
         isConfirming={isConfirming}
         isConfirmed={isConfirmed}
         error={error}
-        confirmedLabel="You're in — thanks for chipping in."
+        confirmedLabel="You're in. Thanks for chipping in."
       />
     </form>
   );

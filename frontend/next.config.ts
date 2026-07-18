@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname),
   },
+  // Hide the dev-only floating "N" Next.js badge (never present in production).
+  devIndicators: false,
 };
 
 export default nextConfig;

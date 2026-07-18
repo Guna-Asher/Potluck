@@ -3,7 +3,9 @@
 import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-type ToastVariant = "success" | "error";
+// "neutral" is for non-failures like a user cancelling in their wallet —
+// informational, deliberately not styled as an error.
+type ToastVariant = "success" | "error" | "neutral";
 
 interface ToastItem {
   id: number;
@@ -46,7 +48,11 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               transition={{ duration: 0.2, ease: "easeOut" }}
               role="status"
               className={`pointer-events-auto w-full max-w-sm rounded-xl px-4 py-3 text-sm font-medium shadow-lg ${
-                toast.variant === "success" ? "bg-neutral-900 text-white" : "bg-red-600 text-white"
+                toast.variant === "error"
+                  ? "bg-red-600 text-white"
+                  : toast.variant === "neutral"
+                    ? "bg-neutral-700 text-white"
+                    : "bg-neutral-900 text-white"
               }`}
             >
               {toast.message}

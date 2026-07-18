@@ -11,6 +11,12 @@ import { TransactionStatus } from "./TransactionStatus";
 const inputClassName =
   "w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-neutral-900 outline-none transition-shadow focus:border-neutral-400 focus:ring-4 focus:ring-neutral-900/5";
 
+const DEADLINE_PRESETS: { label: string; minutes: number }[] = [
+  { label: "3 days", minutes: 3 * 24 * 60 },
+  { label: "1 week", minutes: 7 * 24 * 60 },
+  { label: "2 weeks", minutes: 14 * 24 * 60 },
+];
+
 export function CreatePotForm() {
   const router = useRouter();
   const { isConnected } = useAccount();
@@ -27,7 +33,7 @@ export function CreatePotForm() {
   // own DeadlineInPast check is the real enforcement; any future time is valid.
   const minDeadline = useMemo(() => minDatetimeLocalValue(0), []);
 
-  useTransactionToast(isConfirmed, error, "Pot created!");
+  useTransactionToast(isConfirmed, error, "Pot created");
 
   useEffect(() => {
     if (isConfirmed && potId !== undefined) {
@@ -120,7 +126,7 @@ export function CreatePotForm() {
               setGoal(e.target.value);
               setGoalError(null);
             }}
-            placeholder="1200"
+            placeholder="25"
             required
             className={inputClassName}
           />
@@ -143,6 +149,21 @@ export function CreatePotForm() {
             required
             className={inputClassName}
           />
+          <div className="flex flex-wrap gap-1.5 pt-0.5">
+            {DEADLINE_PRESETS.map((preset) => (
+              <button
+                key={preset.label}
+                type="button"
+                onClick={() => {
+                  setDeadline(minDatetimeLocalValue(preset.minutes));
+                  setDeadlineError(null);
+                }}
+                className="rounded-full border border-neutral-200 px-3 py-1 text-xs font-medium text-neutral-600 transition-colors hover:border-neutral-300 hover:bg-neutral-50"
+              >
+                {preset.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -162,7 +183,7 @@ export function CreatePotForm() {
         isConfirming={isConfirming}
         isConfirmed={isConfirmed}
         error={error}
-        confirmedLabel="Pot created — taking you there now…"
+        confirmedLabel="Taking you to your pot…"
       />
     </form>
   );

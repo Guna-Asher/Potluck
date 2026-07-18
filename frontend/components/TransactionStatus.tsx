@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { getFriendlyErrorMessage } from "@/lib/format";
+import { getFriendlyErrorMessage, isUserRejection } from "@/lib/format";
 import { ExplorerLink } from "./ExplorerLink";
 
 interface TransactionStatusProps {
@@ -36,7 +36,7 @@ export function TransactionStatus({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.15 }}
-          className="text-sm text-red-600"
+          className={`text-sm ${isUserRejection(error) ? "text-neutral-500" : "text-red-600"}`}
         >
           {getFriendlyErrorMessage(error)}
         </motion.p>

@@ -15,6 +15,7 @@ import { CopyLinkButton } from "@/components/CopyLinkButton";
 import { RefreshButton } from "@/components/RefreshButton";
 import { EscrowTrustRow } from "@/components/EscrowTrustRow";
 import { LiveIndicator } from "@/components/LiveIndicator";
+import { PotSkeleton } from "@/components/PotSkeleton";
 import { getPotStatus } from "@/lib/potStatus";
 import { formatMon } from "@/lib/format";
 
@@ -57,7 +58,7 @@ export default function PotPage() {
     <main className="mx-auto min-h-screen w-full max-w-4xl px-6 py-10 sm:py-16">
       {potId === undefined && <p className="text-neutral-500">That doesn&rsquo;t look like a valid pot link.</p>}
 
-      {potId !== undefined && isLoading && <p className="text-neutral-500">Loading pot…</p>}
+      {potId !== undefined && isLoading && <PotSkeleton />}
 
       {potId !== undefined && isError && (
         <p className="text-neutral-500">We couldn&rsquo;t find that pot. Double-check the link.</p>

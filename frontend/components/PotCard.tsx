@@ -16,7 +16,6 @@ interface PotCardProps {
 export function PotCard({ potId, role, fallbackTitle }: PotCardProps) {
   const { pot, isLoading } = usePot(potId);
   const percentage = pot ? calculateProgress(pot.totalContributed, pot.targetAmount) : 0;
-  const goalMet = percentage >= 100;
 
   return (
     <Link href={`/pot/${potId.toString()}`} className="block">
@@ -29,18 +28,23 @@ export function PotCard({ potId, role, fallbackTitle }: PotCardProps) {
         {pot ? (
           <>
             <div className="h-2 w-full overflow-hidden rounded-full bg-neutral-100">
-              <div
-                className={`h-full rounded-full ${goalMet ? "bg-emerald-500" : "bg-blue-400"}`}
-                style={{ width: `${percentage}%` }}
-              />
+              <div className="h-full rounded-full bg-emerald-500" style={{ width: `${percentage}%` }} />
             </div>
             <div className="flex items-center justify-between text-sm tabular-nums">
               <span className="font-medium text-neutral-700">{formatMon(pot.totalContributed)}</span>
               <span className="text-neutral-400">of {formatMon(pot.targetAmount)}</span>
             </div>
           </>
+        ) : isLoading ? (
+          <div className="animate-pulse space-y-3" aria-hidden>
+            <div className="h-2 w-full rounded-full bg-neutral-100" />
+            <div className="flex items-center justify-between">
+              <div className="h-4 w-20 rounded bg-neutral-200/70" />
+              <div className="h-4 w-16 rounded bg-neutral-200/70" />
+            </div>
+          </div>
         ) : (
-          <p className="text-sm text-neutral-400">{isLoading ? "Loading…" : "Unavailable right now"}</p>
+          <p className="text-sm text-neutral-400">Unavailable right now</p>
         )}
 
         <div className="flex items-center justify-between border-t border-neutral-100 pt-3 text-xs font-medium text-neutral-400">

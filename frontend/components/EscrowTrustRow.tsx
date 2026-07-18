@@ -23,7 +23,7 @@ export function EscrowTrustRow() {
         />
       </svg>
       <p>
-        Funds are held by a verified escrow contract — no one can withdraw them early, and refunds
+        Funds are held by a verified escrow contract. No one can withdraw them early, and refunds
         never expire.{" "}
         <a
           href={`${monadMainnet.blockExplorers.default.url}/address/${POTLUCK_ADDRESS}`}
