@@ -16,7 +16,7 @@ collect the money or hold it in between.
 [![Solidity](https://img.shields.io/badge/Solidity-%5E0.8.24-363636?style=flat-square&logo=solidity)](./src/Potluck.sol)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](./LICENSE)
 
-**[Open the app](https://potluck-app-woad.vercel.app/)** · **[Contract on Monadscan](https://monadscan.com/address/0x38777e7308398B4D91E1359fF2ac08148AE9A6b0)** · **[Report an issue](https://github.com/Guna-Asher/Potluck/issues)**
+**[Open the app](https://potluck-app-woad.vercel.app/)** · **[Watch the demo](https://x.com/Guna_Asher/status/2078404340583485701?s=20)** · **[Contract on Monadscan](https://monadscan.com/address/0x38777e7308398B4D91E1359fF2ac08148AE9A6b0)** · **[Report an issue](https://github.com/Guna-Asher/Potluck/issues)**
 
 ![Potluck landing page: the headline "Stop being the friend group's bank" above Start a pot and See how it works buttons, with a Live on Monad Mainnet badge](assets/Landing_Page.png)
 
@@ -27,6 +27,7 @@ collect the money or hold it in between.
 <details>
 <summary><strong>Contents</strong></summary>
 
+- [Demo Video](#demo-video)
 - [Try It in 60 Seconds](#try-it-in-60-seconds)
 - [Why This Matters](#why-this-matters)
 - [How It Works](#how-it-works)
@@ -47,6 +48,21 @@ collect the money or hold it in between.
 
 </details>
 
+## Demo Video
+
+[![Watch the demo](assets/Landing_Page.png)](https://x.com/Guna_Asher/status/2078404340583485701?s=20)
+
+Watch a short walkthrough of Potluck on Monad Mainnet.
+
+In under 3 minutes you'll see:
+
+- Creating a pot
+- Sharing the link
+- Contributing from another wallet
+- Reaching the goal
+- Releasing funds
+- The refund flow
+
 ## Try It in 60 Seconds
 
 You can open the app immediately, no clone or setup required. It runs on Monad Mainnet, so use
@@ -63,8 +79,6 @@ small amounts when trying it.
    every contributor claims back exactly what they put in.
 
 You'll need MetaMask. The app prompts the network switch to Monad Mainnet automatically.
-
-<!-- DEMO VIDEO: walkthrough link goes here -->
 
 ## Why This Matters
 
