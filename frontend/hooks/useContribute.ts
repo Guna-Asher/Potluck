@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { POTLUCK_ABI, POTLUCK_ADDRESS } from "@/lib/contract";
-import { monadTestnet } from "@/lib/chain";
+import { monadMainnet } from "@/lib/chain";
 
 export function useContribute() {
   const { writeContract, data: hash, isPending, error, reset } = useWriteContract();
@@ -17,7 +17,7 @@ export function useContribute() {
         functionName: "contribute",
         args: [potId],
         value: amount,
-        chainId: monadTestnet.id,
+        chainId: monadMainnet.id,
       });
     },
     [writeContract]

@@ -4,7 +4,7 @@ import { Reveal } from "@/components/landing/Reveal";
 import { CountUpNumber } from "@/components/landing/CountUpNumber";
 import { HeroPotPreview } from "@/components/landing/HeroPotPreview";
 import { POTLUCK_ADDRESS } from "@/lib/contract";
-import { monadTestnet } from "@/lib/chain";
+import { monadMainnet } from "@/lib/chain";
 
 const STEPS = [
   {
@@ -26,15 +26,18 @@ const STEPS = [
 ];
 
 const GITHUB_URL = "https://github.com/Guna-Asher/Potluck";
-const EXPLORER_URL = `${monadTestnet.blockExplorers.default.url}/address/${POTLUCK_ADDRESS}`;
+const EXPLORER_URL = `${monadMainnet.blockExplorers.default.url}/address/${POTLUCK_ADDRESS}`;
 
-// A real pot that was funded and released on testnet — not a mockup. Its
+// A real pot that was funded and released on mainnet — not a mockup. Its
 // data is immutable on-chain history, so this link never goes stale.
-const EXAMPLE_LIVE_POT_ID = "4";
+// MAINNET_DEPLOY: the deployment checklist creates and releases this demo pot
+// as the first pot on the fresh contract (potId 1). If it ends up with a
+// different id, update this constant to match.
+const EXAMPLE_LIVE_POT_ID = "1";
 
 const CREDIBILITY_ITEMS: { label: string; href?: string }[] = [
   { label: "Contract Verified", href: EXPLORER_URL },
-  { label: "Live on Monad Testnet" },
+  { label: "Live on Monad Mainnet" },
   { label: "Open Source (MIT)", href: GITHUB_URL },
   { label: "No Admin Keys" },
 ];

@@ -1,7 +1,12 @@
 import { getAddress } from "viem";
 
-// Deployed once, finalized. Do not redeploy or edit this address.
-export const POTLUCK_ADDRESS = getAddress("0xA4C72147682a2E56A5e4344befcB5eddec2fa3a1");
+// Monad Mainnet deployment. Deployed once, finalized — set immediately after
+// running the deployment checklist, then never edited again.
+// MAINNET_DEPLOY: replace the zero-address placeholder with the address printed
+// by `forge script script/Deploy.s.sol:Deploy --rpc-url monad_mainnet ...`.
+// (The previous Monad Testnet instance lives at
+// 0xA4C72147682a2E56A5e4344befcB5eddec2fa3a1 and is unaffected.)
+export const POTLUCK_ADDRESS = getAddress("0x38777e7308398B4D91E1359fF2ac08148AE9A6b0");
 
 export const POTLUCK_ABI = [
   {

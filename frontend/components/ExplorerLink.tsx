@@ -1,4 +1,4 @@
-import { monadTestnet } from "@/lib/chain";
+import { monadMainnet } from "@/lib/chain";
 
 interface ExplorerLinkProps {
   hash?: `0x${string}`;
@@ -9,7 +9,7 @@ interface ExplorerLinkProps {
 export function ExplorerLink({ hash, address, label }: ExplorerLinkProps) {
   if (!hash && !address) return null;
 
-  const explorerBase = monadTestnet.blockExplorers.default.url;
+  const explorerBase = monadMainnet.blockExplorers.default.url;
   const href = hash ? `${explorerBase}/tx/${hash}` : `${explorerBase}/address/${address}`;
 
   return (

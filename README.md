@@ -12,13 +12,13 @@ no one has to ask, and no one has to hold the money in between.
 <!-- Hero Screenshot -->
 
 [![Tests](https://img.shields.io/badge/tests-52%20passing-brightgreen?style=flat-square)](#testing)
-[![Contract Verified](https://img.shields.io/badge/Contract-Verified-brightgreen?style=flat-square)](https://testnet.monadscan.com/address/0xA4C72147682a2E56A5e4344befcB5eddec2fa3a1)
-[![Monad Testnet](https://img.shields.io/badge/Monad-Testnet-836EF9?style=flat-square)](https://testnet.monadscan.com/address/0xA4C72147682a2E56A5e4344befcB5eddec2fa3a1)
+[![Contract Verified](https://img.shields.io/badge/Contract-Verified-brightgreen?style=flat-square)](https://monadscan.com/address/0x38777e7308398B4D91E1359fF2ac08148AE9A6b0)
+[![Monad Mainnet](https://img.shields.io/badge/Monad-Mainnet-836EF9?style=flat-square)](https://monadscan.com/address/0x38777e7308398B4D91E1359fF2ac08148AE9A6b0)
 [![Solidity](https://img.shields.io/badge/Solidity-%5E0.8.24-363636?style=flat-square&logo=solidity)](./src/Potluck.sol)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)](./frontend)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](./LICENSE)
 
-**[Contract on Monadscan](https://testnet.monadscan.com/address/0xA4C72147682a2E56A5e4344befcB5eddec2fa3a1)** · **[Report an Issue](https://github.com/Guna-Asher/Potluck/issues)**
+**[Contract on Monadscan](https://monadscan.com/address/0x38777e7308398B4D91E1359fF2ac08148AE9A6b0)** · **[Report an Issue](https://github.com/Guna-Asher/Potluck/issues)**
 
 </div>
 
@@ -40,6 +40,7 @@ no one has to ask, and no one has to hold the money in between.
 - [Testing](#testing)
 - [Deployment](#deployment)
 - [Project Structure](#project-structure)
+- [FAQ](#faq)
 - [Known Limitations & What's Next](#known-limitations--whats-next)
 - [License](#license)
 
@@ -126,7 +127,7 @@ stateDiagram-v2
 <!-- Demo GIF -->
 <!-- Video Walkthrough -->
 
-The contract itself is already live — see [Contract on Monadscan](https://testnet.monadscan.com/address/0xA4C72147682a2E56A5e4344befcB5eddec2fa3a1)
+The contract itself is already live — see [Contract on Monadscan](https://monadscan.com/address/0x38777e7308398B4D91E1359fF2ac08148AE9A6b0)
 or run the frontend locally against it in under a minute: [Local Development](#local-development).
 
 ## Screenshots
@@ -138,7 +139,7 @@ or run the frontend locally against it in under a minute: [Local Development](#l
 
 ```mermaid
 flowchart LR
-    U["Browser<br/>(Next.js + wagmi/viem)"] -- "reads: getPot, getContribution" --> RPC[("Monad Testnet RPC")]
+    U["Browser<br/>(Next.js + wagmi/viem)"] -- "reads: getPot, getContribution" --> RPC[("Monad Mainnet RPC")]
     U -- "writes: createPot, contribute,<br/>release, claimRefund" --> RPC
     RPC --> C[["Potluck.sol<br/>(single, immutable contract)"]]
 ```
@@ -159,7 +160,8 @@ flowchart LR
 - Contribute any amount, any number of times, from any wallet
 - Organizer-gated release, only once the goal is met and only before the deadline
 - Self-serve refunds for every contributor if the pot expires unreleased, including if the
-  organizer never shows up
+  organizer never shows up — and they never expire: a contribution stays claimable for as long
+  as the contract exists
 - Live per-pot progress: amount raised, percent funded, contributor count, countdown to deadline
 
 **Frontend**
@@ -211,13 +213,19 @@ return value.
 > - **Abandoned-organizer fallback.** `claimRefund` works for every contributor after the deadline
 >   regardless of whether the goal was met, so an organizer who never calls `release()` can't
 >   strand anyone's funds.
+> - **Refunds have no expiry.** `claimRefund` checks only that the deadline has passed and the
+>   pot was never released — there is no claim window, no admin sweep, and no forfeiture path
+>   anywhere in the contract. An unclaimed contribution can't be reclaimed by the organizer, the
+>   deployer, or anyone else; it stays in escrow, claimable only by its contributor, indefinitely.
+>   That's the user-protection floor this whole design rests on: the worst case for a contributor
+>   is always "get exactly your money back, whenever you get around to it."
 
 ## Tech Stack
 
 | Layer | Choice |
 |---|---|
 | Smart contract | Solidity `^0.8.24`, [Foundry](https://getfoundry.sh/) (build, test, deploy, verify) |
-| Chain | Monad Testnet (chain ID `10143`) |
+| Chain | Monad Mainnet (chain ID `143`) |
 | Frontend framework | Next.js 15 (App Router, Turbopack) |
 | UI | React 19, Tailwind CSS 4 |
 | Wallet / chain interaction | wagmi 3, viem 2 (MetaMask connector) |
@@ -238,9 +246,10 @@ npm install
 npm run dev
 ```
 
-The app runs against the already-deployed, verified contract on Monad Testnet — you don't need to
-deploy anything to run the frontend locally. You'll need MetaMask connected to Monad Testnet with
-some testnet MON to contribute or create pots.
+The app runs against the already-deployed, verified contract on Monad Mainnet — you don't need to
+deploy anything to run the frontend locally. You'll need MetaMask connected to Monad Mainnet with
+some MON to contribute or create pots. **This is real money on mainnet** — small amounts are
+plenty for trying it out.
 
 <details>
 <summary><strong>Environment variables</strong></summary>
@@ -251,15 +260,18 @@ some testnet MON to contribute or create pots.
 
 | Variable | Description |
 |---|---|
-| `NEXT_PUBLIC_MONAD_RPC_URL` | RPC endpoint the frontend reads/writes through (default: `https://testnet-rpc.monad.xyz/`) |
+| `NEXT_PUBLIC_MONAD_RPC_URL` | RPC endpoint the frontend reads/writes through (default: `https://rpc.monad.xyz` — the public endpoint is rate-limited, so production should use a dedicated provider URL) |
 
 **Contract deployment** (`.env` at the project root, see `.env.example` — only needed to deploy your own instance)
 
 | Variable | Description |
 |---|---|
-| `PRIVATE_KEY` | Deployer wallet private key (testnet only — never commit this) |
-| `MONAD_TESTNET_RPC_URL` | RPC endpoint used for deployment |
-| `MONADSCAN_API_KEY` | API key for contract verification on Monadscan |
+| `MONAD_MAINNET_RPC_URL` | RPC endpoint used for mainnet deployment (`monad_mainnet` alias in `foundry.toml`) |
+| `MONAD_TESTNET_RPC_URL` | RPC endpoint for testnet deployments (`monad_testnet` alias) |
+| `MONADSCAN_API_KEY` | API key for contract verification on Monadscan (both networks) |
+
+The deployer key is **not** an environment variable: pass it on the forge CLI via an encrypted
+keystore (`cast wallet import` + `--account`). Never put a mainnet private key in a `.env` file.
 
 The contract address and ABI are not environment variables — they're committed constants in
 [`frontend/lib/contract.ts`](./frontend/lib/contract.ts), since this build targets one specific,
@@ -291,11 +303,12 @@ forge coverage           # coverage report
 
 ## Deployment
 
-**Smart contract** — already deployed and verified on Monad Testnet at the address above.
+**Smart contract** — deployed and verified on Monad Mainnet at the address above.
 
 ```bash
 source .env
-forge script script/Deploy.s.sol:Deploy --rpc-url monad_testnet --broadcast --verify -vvvv
+forge script script/Deploy.s.sol:Deploy --rpc-url monad_mainnet \
+  --account potluck-deployer --sender <deployer-address> --broadcast --verify -vvvv
 ```
 
 If you deploy your own instance, update `POTLUCK_ADDRESS` in `frontend/lib/contract.ts`.
@@ -358,6 +371,24 @@ potluck/
 ```
 
 </details>
+
+## FAQ
+
+**Do refunds expire?**
+No. Once a pot's deadline passes without `release()` being called, `claimRefund()` has no time
+limit — the contract checks *that* the deadline has passed, never how long ago. There is no
+refund window, no admin sweep, and no forfeiture mechanism; nobody else can ever take an
+unclaimed contribution.
+
+**What if the organizer disappears?**
+Nothing is lost. Refunds don't involve the organizer at all — after the deadline, `claimRefund`
+pays each contributor their own recorded amount, whether or not the goal was met and whether or
+not the organizer is ever heard from again.
+
+**What if I forget to claim my refund for months or years?**
+It waits. Your contribution is recorded in contract storage that only you can zero out, by
+claiming it. A claim made a year later pays exactly what you put in — the only cost of waiting
+is the gas on the eventual claim transaction.
 
 ## Known Limitations & What's Next
 

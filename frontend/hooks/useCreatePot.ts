@@ -4,7 +4,7 @@ import { useCallback, useMemo } from "react";
 import { parseEventLogs } from "viem";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { POTLUCK_ABI, POTLUCK_ADDRESS } from "@/lib/contract";
-import { monadTestnet } from "@/lib/chain";
+import { monadMainnet } from "@/lib/chain";
 
 /** Creates a pot, then decodes the resulting potId from the PotCreated log
  * in the transaction receipt (a sent transaction has no direct return value —
@@ -25,7 +25,7 @@ export function useCreatePot() {
         abi: POTLUCK_ABI,
         functionName: "createPot",
         args: [title, description, targetAmount, deadline],
-        chainId: monadTestnet.id,
+        chainId: monadMainnet.id,
       });
     },
     [writeContract]

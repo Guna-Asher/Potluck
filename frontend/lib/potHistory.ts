@@ -7,7 +7,10 @@ export interface PotHistoryEntry {
   lastVisited: number; // ms epoch, used for sort order
 }
 
-const STORAGE_KEY = "potluck:history";
+// Chain-scoped (143 = Monad Mainnet): pot IDs are only unique per deployment,
+// so history recorded against the old testnet contract must never be read as
+// mainnet history — same-numbered pots are entirely different pots.
+const STORAGE_KEY = "potluck:143:history";
 
 // localStorage can be hand-edited, shared across app versions with a
 // different schema, or partially written — never trust its shape blindly.

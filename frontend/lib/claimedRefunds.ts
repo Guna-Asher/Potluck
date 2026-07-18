@@ -1,4 +1,7 @@
-const STORAGE_KEY = "potluck:claimedRefunds";
+// Chain-scoped (143 = Monad Mainnet): a "potId:address" claim seen on the old
+// testnet contract says nothing about the same-numbered mainnet pot, so keys
+// recorded there must never surface here.
+const STORAGE_KEY = "potluck:143:claimedRefunds";
 
 // A flat list of "potId:address" keys this browser has personally seen a
 // successful refund claim for. Address is lowercased so the same wallet is

@@ -1,4 +1,4 @@
-import { monadTestnet } from "@/lib/chain";
+import { monadMainnet } from "@/lib/chain";
 
 interface PotHeaderProps {
   title: string;
@@ -18,7 +18,7 @@ export function PotHeader({ title, description, organizer }: PotHeaderProps) {
       <div className="inline-flex items-center gap-1.5 rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-500">
         <span>Organized by {truncateAddress(organizer)}</span>
         <a
-          href={`${monadTestnet.blockExplorers.default.url}/address/${organizer}`}
+          href={`${monadMainnet.blockExplorers.default.url}/address/${organizer}`}
           target="_blank"
           rel="noopener noreferrer"
           className="text-neutral-400 underline decoration-neutral-300 underline-offset-2 hover:text-neutral-700"
