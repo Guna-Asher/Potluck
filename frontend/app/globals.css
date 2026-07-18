@@ -6,20 +6,48 @@
   /* A single soft, layered elevation used by every card in the app —
      closer to Stripe/Linear's ambient shadows than Tailwind's flat
      defaults. One token here keeps every surface consistent by
-     construction instead of by convention. */
+     construction instead of by convention. Exactly two elevation levels
+     exist: card (resting surfaces) and overlay (toasts). */
   --shadow-card: 0 1px 2px 0 rgb(0 0 0 / 0.04), 0 8px 24px -12px rgb(0 0 0 / 0.10);
   --shadow-card-hover: 0 2px 4px 0 rgb(0 0 0 / 0.05), 0 16px 32px -12px rgb(0 0 0 / 0.14);
+  --shadow-overlay: 0 4px 12px rgb(0 0 0 / 0.08), 0 12px 32px -8px rgb(0 0 0 / 0.18);
+
+  /* Page canvas — stone-50, deliberately one step warmer than the neutral
+     component greys. Owned here instead of hardcoded on body. */
+  --color-canvas: #fafaf9;
+
+  /* Shape grammar (see DESIGN.md): pills are rounded-full and mean
+     "interactive"; containers use these two radii. */
+  --radius-surface: 1rem; /* cards, panels (rounded-2xl) */
+  --radius-control: 0.75rem; /* inputs, inner rows (rounded-xl) */
+}
+
+/* Semantic color roles (see DESIGN.md). `inline` so utilities resolve the
+   referenced palette values at build time. Not yet adopted by components —
+   the P2 button/color migration will swap raw palette classes for these. */
+@theme inline {
+  --color-ink: var(--color-neutral-900); /* text + primary actions */
+  --color-ink-secondary: var(--color-neutral-600);
+  --color-ink-muted: var(--color-neutral-400);
+  --color-brand: var(--color-emerald-600); /* money actions */
+  --color-brand-fill: var(--color-emerald-500); /* data: progress, live dots */
+  --color-brand-ink: var(--color-emerald-700); /* emerald text on light */
+  --color-brand-tint: var(--color-emerald-50);
+  --color-warn-tint: var(--color-amber-50);
+  --color-warn-ink: var(--color-amber-700);
+  --color-danger: var(--color-red-600);
 }
 
 body {
-  background-color: #fafaf9;
+  background-color: var(--color-canvas, #fafaf9);
 }
 
 /* One keyboard-focus treatment for every button and link. Inputs keep their
    own focus ring (border + ring in the input classes), so they're excluded
-   here to avoid doubling up. */
+   here to avoid doubling up. Falls back to the literal emerald-500 if the
+   palette variable isn't emitted at runtime. */
 :where(button, a):focus-visible {
-  outline: 2px solid rgb(16 185 129); /* emerald-500 */
+  outline: 2px solid var(--color-emerald-500, rgb(16 185 129));
   outline-offset: 2px;
   border-radius: inherit;
 }

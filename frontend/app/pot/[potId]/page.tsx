@@ -16,6 +16,7 @@ import { RefreshButton } from "@/components/RefreshButton";
 import { EscrowTrustRow } from "@/components/EscrowTrustRow";
 import { LiveIndicator } from "@/components/LiveIndicator";
 import { PotSkeleton } from "@/components/PotSkeleton";
+import { CheckIcon } from "@/components/ui/icons";
 import { getPotStatus } from "@/lib/potStatus";
 import { formatMon } from "@/lib/format";
 
@@ -108,15 +109,7 @@ export default function PotPage() {
             {pot.released && (
               <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6 text-center">
                 <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600 text-white">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path
-                      d="M3 8.5L6.5 12L13 4.5"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                  <CheckIcon />
                 </span>
                 <h3 className="mt-3 font-semibold text-emerald-900">Paid out</h3>
                 <p className="mt-1 text-sm tabular-nums text-emerald-800">

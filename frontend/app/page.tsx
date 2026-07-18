@@ -5,6 +5,8 @@ import { CountUpNumber } from "@/components/landing/CountUpNumber";
 import { HeroPotPreview } from "@/components/landing/HeroPotPreview";
 import { EXAMPLE_POT_ID, POTLUCK_ADDRESS } from "@/lib/contract";
 import { monadMainnet } from "@/lib/chain";
+import { truncateAddress } from "@/lib/format";
+import { CheckIcon } from "@/components/ui/icons";
 
 const STEPS = [
   {
@@ -55,24 +57,6 @@ const USE_CASES = [
     context: "Group gifts",
   },
 ];
-
-function truncateAddress(address: string): string {
-  return `${address.slice(0, 6)}…${address.slice(-4)}`;
-}
-
-function CheckIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <path
-        d="M3 8.5L6.5 12L13 4.5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 export default function HomePage() {
   return (
@@ -154,7 +138,7 @@ export default function HomePage() {
             className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700"
           >
             <span className="text-emerald-600">
-              <CheckIcon />
+              <CheckIcon size={12} />
             </span>
             <CountUpNumber value={52} className="tabular-nums" /> Contract Tests Passing
           </Reveal>
@@ -164,7 +148,7 @@ export default function HomePage() {
             const content = (
               <>
                 <span className="text-emerald-600">
-                  <CheckIcon />
+                  <CheckIcon size={12} />
                 </span>
                 {item.label}
               </>
@@ -257,7 +241,7 @@ export default function HomePage() {
             {TRUST_POINTS.map((point, index) => (
               <Reveal key={point} delay={index * 0.1} className="flex items-start gap-4 py-6 sm:items-center sm:py-7">
                 <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-400 sm:mt-0">
-                  <CheckIcon />
+                  <CheckIcon size={12} />
                 </span>
                 <p className="text-base text-neutral-200 sm:text-lg">{point}</p>
               </Reveal>

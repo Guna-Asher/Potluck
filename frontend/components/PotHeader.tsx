@@ -1,4 +1,5 @@
 import { monadMainnet } from "@/lib/chain";
+import { truncateAddress } from "@/lib/format";
 
 interface PotHeaderProps {
   title: string;
@@ -7,10 +8,6 @@ interface PotHeaderProps {
   /** True when the connected wallet is this pot's organizer — swaps the
    * "Organized by 0x…" chip for direct address ("You're the organizer"). */
   isViewerOrganizer?: boolean;
-}
-
-function truncateAddress(address: string): string {
-  return `${address.slice(0, 6)}…${address.slice(-4)}`;
 }
 
 export function PotHeader({ title, description, organizer, isViewerOrganizer = false }: PotHeaderProps) {

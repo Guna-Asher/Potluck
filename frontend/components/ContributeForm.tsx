@@ -5,6 +5,7 @@ import { useAccount } from "wagmi";
 import { useContribute } from "@/hooks/useContribute";
 import { useTransactionToast } from "@/hooks/useTransactionToast";
 import { formatMon, parseMon } from "@/lib/format";
+import { Card } from "./ui/Card";
 import { TransactionStatus } from "./TransactionStatus";
 import { useToast } from "./Toast";
 
@@ -55,10 +56,7 @@ export function ContributeForm({ potId, remainingAmount, onSuccess }: Contribute
   };
 
   return (
-    <form
-      className="space-y-4 rounded-2xl border border-neutral-200/70 bg-white p-6 shadow-card sm:p-7"
-      onSubmit={handleSubmit}
-    >
+    <Card as="form" onSubmit={handleSubmit} className="space-y-4">
       <div className="flex items-baseline justify-between">
         <label htmlFor="amount" className="text-sm font-medium text-neutral-700">
           Chip in
@@ -96,6 +94,6 @@ export function ContributeForm({ potId, remainingAmount, onSuccess }: Contribute
         error={error}
         confirmedLabel="You're in. Thanks for chipping in."
       />
-    </form>
+    </Card>
   );
 }

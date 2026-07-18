@@ -3,11 +3,7 @@
 import { useEffect } from "react";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { useToast } from "./Toast";
-import { getFriendlyErrorMessage } from "@/lib/format";
-
-function truncateAddress(address: string): string {
-  return `${address.slice(0, 6)}…${address.slice(-4)}`;
-}
+import { getFriendlyErrorMessage, truncateAddress } from "@/lib/format";
 
 export function WalletConnectButton() {
   const { address, isConnected } = useAccount();

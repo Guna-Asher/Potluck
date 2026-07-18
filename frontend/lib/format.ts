@@ -1,5 +1,11 @@
 import { BaseError, ContractFunctionRevertedError, formatEther, parseEther } from "viem";
 
+/** "0x38777e73…A6b0"-style display form for addresses. The one shared
+ * implementation — don't redeclare locally. */
+export function truncateAddress(address: string): string {
+  return `${address.slice(0, 6)}…${address.slice(-4)}`;
+}
+
 export function formatMon(value: bigint): string {
   const asNumber = Number(formatEther(value));
   return `${asNumber.toLocaleString(undefined, { maximumFractionDigits: 4 })} MON`;

@@ -4,15 +4,12 @@ import { useMemo } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { parseEther } from "viem";
 import { PotProgress } from "@/components/PotProgress";
+import { truncateAddress } from "@/lib/format";
 import type { Pot } from "@/hooks/usePot";
 
 // Not a real, callable address — never linked out to, only ever displayed as
 // text, so there's nothing here for a visitor to mistake for a real pot.
 const DEMO_ORGANIZER = "0x71C76B4394024Ce301AC4e58189B4C60cCa2656" as const;
-
-function truncateAddress(address: string): string {
-  return `${address.slice(0, 6)}…${address.slice(-4)}`;
-}
 
 /** Renders the real PotProgress component (unmodified — the same one that
  * powers /pot/[potId]) against an illustrative, clearly-labeled example pot,
@@ -46,7 +43,7 @@ export function HeroPotPreview() {
       }
       whileHover={reduceMotion ? undefined : { y: -4, transition: { duration: 0.2, ease: "easeOut" } }}
     >
-      <span className="absolute -top-3 left-6 z-10 rounded-full bg-neutral-900 px-3 py-1 text-xs font-medium text-white shadow-sm">
+      <span className="absolute -top-3 left-6 z-10 rounded-full bg-neutral-900 px-3 py-1 text-xs font-medium text-white shadow-card">
         Example pot
       </span>
 

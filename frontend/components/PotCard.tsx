@@ -39,8 +39,8 @@ export function PotCard({ potId, role, fallbackTitle }: PotCardProps) {
           <div className="animate-pulse space-y-3" aria-hidden>
             <div className="h-2 w-full rounded-full bg-neutral-100" />
             <div className="flex items-center justify-between">
-              <div className="h-4 w-20 rounded bg-neutral-200/70" />
-              <div className="h-4 w-16 rounded bg-neutral-200/70" />
+              <div className="h-4 w-20 rounded-md bg-neutral-200/70" />
+              <div className="h-4 w-16 rounded-md bg-neutral-200/70" />
             </div>
           </div>
         ) : (

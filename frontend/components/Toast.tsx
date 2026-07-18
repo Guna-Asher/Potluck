@@ -47,7 +47,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
               role="status"
-              className={`pointer-events-auto w-full max-w-sm rounded-xl px-4 py-3 text-sm font-medium shadow-lg ${
+              className={`pointer-events-auto w-full max-w-sm rounded-xl px-4 py-3 text-sm font-medium shadow-overlay ${
                 toast.variant === "error"
                   ? "bg-red-600 text-white"
                   : toast.variant === "neutral"

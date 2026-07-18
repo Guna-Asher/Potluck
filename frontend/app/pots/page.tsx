@@ -5,6 +5,7 @@ import { usePotHistory } from "@/hooks/usePotHistory";
 import { PotCard } from "@/components/PotCard";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { EXAMPLE_POT_ID } from "@/lib/contract";
+import { PotIcon } from "@/components/ui/icons";
 
 export default function PotsPage() {
   const { entries } = usePotHistory();
@@ -27,19 +28,7 @@ export default function PotsPage() {
       {entries.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-neutral-300 px-6 py-16 text-center">
           <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-neutral-100 text-neutral-400">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              aria-hidden="true"
-              className="h-5 w-5"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5h15" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5.5 10.5a6.5 6.5 0 0 0 13 0" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5v-2m-3.5 2.5L7 6.5m8.5 1.5L17 6.5" />
-            </svg>
+            <PotIcon className="h-5 w-5" />
           </span>
           <h2 className="mt-4 font-semibold text-neutral-900">No pots on this device yet</h2>
           <p className="mx-auto mt-1 max-w-sm text-sm text-neutral-500">

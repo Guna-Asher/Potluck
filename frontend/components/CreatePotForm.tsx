@@ -6,6 +6,7 @@ import { useAccount } from "wagmi";
 import { useCreatePot } from "@/hooks/useCreatePot";
 import { useTransactionToast } from "@/hooks/useTransactionToast";
 import { minDatetimeLocalValue, parseMon } from "@/lib/format";
+import { Card } from "./ui/Card";
 import { TransactionStatus } from "./TransactionStatus";
 
 const inputClassName =
@@ -77,10 +78,7 @@ export function CreatePotForm() {
   const isSubmitting = isPending || isConfirming;
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-6 rounded-2xl border border-neutral-200/70 bg-white p-6 shadow-card sm:p-7"
-    >
+    <Card as="form" onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-1.5">
         <label htmlFor="title" className="text-sm font-medium text-neutral-700">
           What are you collecting for?
@@ -185,6 +183,6 @@ export function CreatePotForm() {
         error={error}
         confirmedLabel="Taking you to your pot…"
       />
-    </form>
+    </Card>
   );
 }
