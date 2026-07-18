@@ -12,6 +12,7 @@ import { ContributeForm } from "@/components/ContributeForm";
 import { ReleaseButton } from "@/components/ReleaseButton";
 import { ClaimRefundButton } from "@/components/ClaimRefundButton";
 import { CopyLinkButton } from "@/components/CopyLinkButton";
+import { RefreshButton } from "@/components/RefreshButton";
 import { getPotStatus } from "@/lib/potStatus";
 
 export default function PotPage() {
@@ -61,7 +62,10 @@ export default function PotPage() {
           <div className="space-y-5">
             <PotHeader title={pot.title} description={pot.description} organizer={pot.organizer} />
             <PotProgress pot={pot} />
-            <CopyLinkButton key={`copy-${potId}`} potId={potId} />
+            <div className="flex items-center gap-2">
+              <CopyLinkButton key={`copy-${potId}`} potId={potId} />
+              <RefreshButton />
+            </div>
           </div>
 
           {/* Action zone — what you can do about it right now */}
