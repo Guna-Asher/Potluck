@@ -50,7 +50,9 @@ collect the money or hold it in between.
 
 ## Demo Video
 
-[![Watch the demo](assets/Landing_Page.png)](https://x.com/Guna_Asher/status/2078404340583485701?s=20)
+
+https://github.com/user-attachments/assets/95443abb-01fb-44e8-bfd6-2a41d07ec203
+
 
 Watch a short walkthrough of Potluck on Monad Mainnet.
 
